@@ -1,0 +1,54 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+
+
+@theme
+{
+  --color-accent-one: #007FFF;
+  --color-accent-two: #17E9E1;
+  
+  --color-dark-primary: #17224D;
+  --color-dark-secondary: #2E3E7D;
+  --color-dark-tertiary: #516BC2;
+  
+  --color-light-primary: #DDF8FF;
+  --color-light-secondary: #F5FAFA;
+  --color-light-tertiary: #B7EFFE;
+}
+
+:root {
+  font-family: Parkinsans, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+body
+{
+  overflow: auto;
+  overflow: initial;
+}
+input 
+{
+  font-family: Parkinsans, sans-serif;
+}
+.loader 
+{
+  width: 40px;
+  height: 40px;
+  --c:no-repeat linear-gradient(var(--color-accent-one) 0 0);
+  background: var(--c),var(--c),var(--c),var(--c);
+  background-size: 21px 21px;
+  animation: l5 1.5s infinite cubic-bezier(0.3,1,0,1);
+  border-radius: 5%;
+}
+@keyframes l5 
+{
+   0%   {background-position: 0    0,100% 0   ,100% 100%,0 100%}
+   33%  {background-position: 0    0,100% 0   ,100% 100%,0 100%;width:60px;height: 60px}
+   66%  {background-position: 100% 0,100% 100%,0    100%,0 0   ;width:60px;height: 60px}
+   100% {background-position: 100% 0,100% 100%,0    100%,0 0   }
+}
