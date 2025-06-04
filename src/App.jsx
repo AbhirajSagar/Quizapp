@@ -11,6 +11,7 @@ import Loading from "./pages/Loading"
 import Review from "./pages/Review"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faMoon, faLightbulb } from "@fortawesome/free-solid-svg-icons"
+import { HashRouter } from 'react-router-dom'
 
 export default function App()
 {
@@ -67,24 +68,26 @@ export default function App()
     }
 
     return (
-        <div>
-            <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/editor" element={<Editor />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/player" element={<Player />} />
-                <Route path="/review" element={<Review />} />
-                <Route path="*" element={<NotFound />} />
-            </Routes>
-            <div
-                onClick={() => toggleDarkMode(!darkMode)}
-                className="z-[100] w-10 h-10 bg-accent-one dark:bg-dark-secondary flex justify-center items-center fixed bottom-0 right-0 m-8 rounded-full p-2 dark:hover:bg-dark-tertiary hover:bg-accent-two hover:scale-125 transition-transform duration-100"
-            >
-                <FontAwesomeIcon
-                    icon={darkMode ? faLightbulb : faMoon}
-                    className="text-2xl text-white cursor-pointer"
-                />
+        <HashRouter>
+            <div>
+                <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/editor" element={<Editor />} />
+                    <Route path="/about" element={<About />} />
+                    <Route path="/player" element={<Player />} />
+                    <Route path="/review" element={<Review />} />
+                    <Route path="*" element={<NotFound />} />
+                </Routes>
+                <div
+                    onClick={() => toggleDarkMode(!darkMode)}
+                    className="z-[100] w-10 h-10 bg-accent-one dark:bg-dark-secondary flex justify-center items-center fixed bottom-0 right-0 m-8 rounded-full p-2 dark:hover:bg-dark-tertiary hover:bg-accent-two hover:scale-125 transition-transform duration-100"
+                >
+                    <FontAwesomeIcon
+                        icon={darkMode ? faLightbulb : faMoon}
+                        className="text-2xl text-white cursor-pointer"
+                    />
+                </div>
             </div>
-        </div>
+        </HashRouter>
     )
 }
