@@ -1,8 +1,6 @@
 @import "tailwindcss";
 @custom-variant dark (&:where(.dark, .dark *));
 
-
-
 @theme
 {
   --color-accent-one: #007FFF;
@@ -39,9 +37,19 @@ input
 {
   width: 40px;
   height: 40px;
-  --c:no-repeat linear-gradient(var(--color-accent-one) 0 0);
-  background: var(--c),var(--c),var(--c),var(--c);
+  --c: no-repeat linear-gradient(to left, var(--color-accent-one), var(--color-accent-one));
+  background: var(--c), var(--c), var(--c), var(--c);
   background-size: 21px 21px;
+  animation: l5 1.5s infinite cubic-bezier(0.3,1,0,1);
+  border-radius: 5%;
+}
+.dark .loader 
+{
+  width: 40px;
+  height: 40px;
+  --c: no-repeat linear-gradient(to left, var(--color-dark-tertiary), var(--color-dark-tertiary));
+  background: var(--c), var(--c), var(--c), var(--c);
+  background-size: 25px 25px;
   animation: l5 1.5s infinite cubic-bezier(0.3,1,0,1);
   border-radius: 5%;
 }
