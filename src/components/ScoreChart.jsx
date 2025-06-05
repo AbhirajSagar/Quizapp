@@ -23,6 +23,7 @@ ChartJS.register(
 export default function ScoreChart({ user,attempts, title, subtitle = '' }) 
 {
   const [darkMode, setMode] = useState(localStorage.getItem('mode') === 'true')
+  console.log(attempts);
   const labels = Object.keys(attempts);
   const scores = Object.values(attempts);
   const rootStyles = getComputedStyle(document.documentElement);
@@ -34,6 +35,7 @@ export default function ScoreChart({ user,attempts, title, subtitle = '' })
   useEffect(() => 
   {
     setMode(localStorage.getItem('mode') === 'true')
+    console.log('recieved userAttempts',attempts);
   }, [localStorage.getItem('mode')]);
 
   const data =
@@ -52,8 +54,8 @@ export default function ScoreChart({ user,attempts, title, subtitle = '' })
               : (darkMode ? barDarkColor : barLightColor)
           })
 ,
-          borderRadius: 10,
-          maxBarThickness: 60
+          borderRadius: 5,
+          maxBarThickness: 15
         }
       ]
   };

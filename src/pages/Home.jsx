@@ -53,7 +53,7 @@ function Section({ heading, subheading, isLoading, quizzes }) {
         <div className="w-full bg-primary-secondary columns-1 sm:columns-2 md:columns-4 gap-2 p-1 pt-3 md:p-4">
         {
           isLoading
-            ? [...Array(9)].map((_, index) => <div key={index} className="mb-4 break-inside-avoid"><QuizSkeleton /></div>)
+            ? [...Array(15)].map((_, index) => <div key={index} className="mb-4 break-inside-avoid"><QuizSkeleton /></div>)
             : quizzes.map((quiz, index) => (
               <div key={index} className="mb-2 break-inside-avoid">
                 <QuizCard quiz={quiz} />
@@ -65,12 +65,13 @@ function Section({ heading, subheading, isLoading, quizzes }) {
   );
 }
 
-function QuizSkeleton() {
+function QuizSkeleton({url,setIsCardLoaded}) {
   return (
     <div className='w-full h-60 my-1 z-1 bg-light-secondary dark:bg-dark-secondary relative rounded-lg overflow-hidden cursor-pointer hover:-translate-y-1 transition-transform duration-75 animate-pulse'>
       <div className='w-full absolute bottom-0 h-12 bg-accent-one dark:bg-dark-tertiary flex justify-between items-center px-4'>
         <p className='text-light-primary sm:font-semibold md:text-xl text-center'></p>
         <FontAwesomeIcon icon={faShare} className='text-light-primary text-xl' />
+        <img src={url} onLoad={()=>setIsCardLoaded(true)} className='hidden'/>
       </div>
     </div>
   );
@@ -78,6 +79,7 @@ function QuizSkeleton() {
 
 function QuizCard({ quiz }) 
 {
+  const [loaded,setIsCardLoaded] = useState(false);
   const navigate = useNavigate();
   const goToPlayer = (query) => navigate('/player' + query);
 
@@ -107,6 +109,8 @@ function QuizCard({ quiz })
     return quiz.title;
   }
 
+  if(!loaded) return <QuizSkeleton url={quiz.thumbnailPath} setIsCardLoaded={setIsCardLoaded}/>
+
   return (
     <div
       onClick={(e) => goToPlayer(`?file=${quiz.filePath}&id=${quiz.id}`)}
@@ -123,7 +127,7 @@ function QuizCard({ quiz })
           {getTrimmedTitle() || 'Untitled'}
         </p>
         <div className='flex items-center justify-center gap-3'>
-          <FontAwesomeIcon icon={faHeart} className='text-light-primary text-xl hover:text-accent-two' />
+          {/* <FontAwesomeIcon icon={faHeart} onClick={(e) => e.stopPropagation()} className='text-light-primary text-xl hover:text-accent-two' /> */}
           <FontAwesomeIcon onClick={share} icon={faShare} className='text-light-primary text-xl hover:text-accent-two' />
         </div>
       </div>
@@ -131,7 +135,8 @@ function QuizCard({ quiz })
   );
 }
 
-function Navbar({ setAccountInfoVisible }) {
+function Navbar({ setAccountInfoVisible }) 
+{
   const navigate = useNavigate();
   const createQuiz = () => navigate('/editor');
 
@@ -140,13 +145,8 @@ function Navbar({ setAccountInfoVisible }) {
       <h2 className='dark:text-white text-accent-one text-md md:text-2xl font-extrabold'>Quizin'</h2>
       <div className='h-full w-[50%] flex justify-end'>
         <SearchBtn />
-        <button onClick={createQuiz} className='bg-accent-one p-4 flex h-full justify-center items-center gap-1.5 mx-1.5 rounded cursor-pointer hover:bg-accent-two'>
-          <FontAwesomeIcon icon={faPlusCircle} className='text-white' />
-          <p className='text-white text-xs md:text-md'>Create</p>
-        </button>
-        <div onClick={() => setAccountInfoVisible(true)} className='aspect-square h-full cursor-pointer bg-accent-one hover:bg-accent-two dark:hover:bg-dark-secondary rounded text-white flex justify-center items-center dark:bg-dark-tertiary'>
-          <FontAwesomeIcon icon={faHouseUser} />
-        </div>
+        <AnimatedButton text='Create' icon={faPlusCircle} layout='horizontal' onClick={createQuiz} className='mx-1'/>
+        <AnimatedButton icon={faHouseUser} layout='horizontal' onClick={() => setAccountInfoVisible(true)} />
       </div>
     </div>
   );
@@ -154,11 +154,7 @@ function Navbar({ setAccountInfoVisible }) {
 
 function SearchBtn() {
   return (
-    // <div className='flex px-2 w-fit bg-accent-one dark:bg-dark-secondary rounded m-0 h-full justify-center items-center gap-1.5 cursor-pointer hover:bg-accent-two hover:drop-shadow-accent-two drop-shadow-2xl'>
-    //   <FontAwesomeIcon icon={faSearch} className='text-white' />
-    //   <p className='text-white hidden md:flex font-semibold text-sm'>Search</p>
-    // </div>
-    <AnimatedButton text='Search' icon={faSearch}/>
+    <AnimatedButton text='Search' icon={faSearch} layout='horizontal'/>
   );
 }
 

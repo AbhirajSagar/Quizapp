@@ -1,40 +1,81 @@
-import { useEffect } from 'react';
-import { Bar } from 'react-chartjs-2';
+import { useEffect, useState } from 'react';
+import { Line } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
-  BarElement,
+  PointElement,
+  LineElement,
   Title,
   Tooltip,
   Legend
 } from 'chart.js';
-import { useState } from 'react';
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend
-);
-
-export default function ScoreChart({ user,attempts, title, subtitle = '' }) 
+export default function LineChart({ user, attempts, title, subtitle = '' }) 
 {
-  const [darkMode, setMode] = useState(localStorage.getItem('mode') === 'true')
-  const labels = Object.keys(attempts);
-  const scores = Object.values(attempts);
+  const [darkMode, setMode] = useState(localStorage.getItem('mode') === 'true');
+  const [filter, setFilter] = useState('Last 7 days');
+
+  useEffect(() => setMode(localStorage.getItem('mode') === 'true'), [localStorage.getItem('mode')]);
+
+  // Filter attempts by selected date range
+  const filteredAttempts = () => 
+  {
+    const now = new Date();
+    const keys = Object.keys(attempts);
+    return keys.filter(key => 
+    {
+      const date = new Date(key);
+      switch(filter) 
+      {
+        case 'Today':
+          return date.toDateString() === now.toDateString();
+        case 'Yesterday':
+          const yesterday = new Date(now);
+          yesterday.setDate(yesterday.getDate() - 1);
+          return date.toDateString() === yesterday.toDateString();
+        case 'Last 7 days':
+          const sevenDaysAgo = new Date(now);
+          sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+          return date >= sevenDaysAgo && date <= now;
+        case 'This month':
+          return date.getFullYear() === now.getFullYear() && date.getMonth() === now.getMonth();
+        case 'This year':
+          return date.getFullYear() === now.getFullYear();
+        default:
+          return true;
+      }
+    });
+  };
+
+  const tempLabels = filteredAttempts();
+  const labels = tempLabels.map(tempLabel =>
+  {
+    const date = new Date(tempLabel);
+    const day = getDayWithSuffix(date.getDate());
+    const month = date.toLocaleString('en-IN', { month: 'long' });
+    return `${day} ${month}`;
+  });
+
+  const scores = tempLabels.map(key => attempts[key]);
   const rootStyles = getComputedStyle(document.documentElement);
 
   const barDarkColor = rootStyles.getPropertyValue(`--color-dark-tertiary`).trim();
   const barLightColor = rootStyles.getPropertyValue(`--color-accent-one`).trim();
   const tooltipDarkColor = rootStyles.getPropertyValue(`--color-dark-primary`).trim();
 
-  useEffect(() => 
+  function getDayWithSuffix(day) 
   {
-    setMode(localStorage.getItem('mode') === 'true')
-  }, [localStorage.getItem('mode')]);
+    if (day > 3 && day < 21) return day + 'th';
+    switch (day % 10) 
+    {
+      case 1: return day + 'st';
+      case 2: return day + 'nd';
+      case 3: return day + 'rd';
+      default: return day + 'th';
+    }
+  }
 
   const data =
   {
@@ -44,14 +85,7 @@ export default function ScoreChart({ user,attempts, title, subtitle = '' })
         {
           label: 'Best Score',
           data: scores,
-          backgroundColor: scores.map((_, i) => 
-          {
-            const isUser = labels[i] === user?.user_metadata?.name;
-            return isUser
-              ? (darkMode ? '#FFD700' : '#FFB800') // Highlight color
-              : (darkMode ? barDarkColor : barLightColor)
-          })
-,
+          borderColor: darkMode ? barDarkColor : barLightColor,
           borderRadius: 10,
           maxBarThickness: 60
         }
@@ -65,29 +99,45 @@ export default function ScoreChart({ user,attempts, title, subtitle = '' })
     plugins:
     {
       legend: { display: false },
-      tooltip: {
+      tooltip: 
+      {
         backgroundColor: tooltipDarkColor,
         padding: 12,
-        titleFont: {
+        titleFont: 
+        {
           size: 14,
           family: "'Parkinsans', sans-serif"
         },
-        bodyFont: {
+        bodyFont: 
+        {
           size: 13,
           family: "'Parkinsans', sans-serif"
+        },
+        callbacks: 
+        {
+          title: context => 
+          {
+            const originalKey = tempLabels[context[0].dataIndex];
+            return `Date: ${new Date(originalKey).toLocaleString('en-IN')}`;
+          },
+          label: context => `Score: ${context.parsed.y}`
         }
       }
     },
     scales:
     {
-      y: {
+      y: 
+      {
         beginAtZero: true,
-        grid: {
+        grid: 
+        {
           color: 'rgba(0, 0, 0, 0.1)',
           drawBorder: false
         },
-        ticks: {
-          font: {
+        ticks: 
+        {
+          font: 
+          {
             size: 12,
             family: "'Parkinsans', sans-serif",
           },
@@ -95,12 +145,16 @@ export default function ScoreChart({ user,attempts, title, subtitle = '' })
           color: darkMode ? 'white' : 'var(--color-dark-primary)'
         }
       },
-      x: {
-        grid: {
+      x: 
+      {
+        grid: 
+        {
           display: false
         },
-        ticks: {
-          font: {
+        ticks: 
+        {
+          font: 
+          {
             size: 12,
             family: "'Parkinsans', sans-serif"
           },
@@ -115,8 +169,21 @@ export default function ScoreChart({ user,attempts, title, subtitle = '' })
     <div className='h-fit flex justify-center items-center flex-col'>
       <h2 className='text-left font-bold dark:text-light-secondary text-accent-one text-md'>{title}</h2>
       {subtitle.length > 0 && <h2 className='text-center dark:text-light-secondary text-accent-one text-xs px-4 mb-4'>{subtitle}</h2>}
+
+      <select
+        value={filter}
+        onChange={e => setFilter(e.target.value)}
+        className='mb-4 p-1 rounded border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-black dark:text-white'
+      >
+        <option>Last 7 days</option>
+        <option>Today</option>
+        <option>Yesterday</option>
+        <option>This month</option>
+        <option>This year</option>
+      </select>
+
       <div className="relative w-full h-[300px]">
-        <Bar data={data} options={options} />
+        <Line data={data} options={options} />
       </div>
     </div>
   );

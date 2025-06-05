@@ -314,8 +314,8 @@ function EndPage({ goToHome, goToReview, marks, quizId })
                     :
                     <p className='text-center dark:text-light-primary text-sm text-cyan-500 mb-6'>You have completed the quiz</p>
             }
-            <AnimatedButton text='Back to Home' width='w-42' hideTextOnSmallScreens={false} icon={faHome} onClick={() => goToHome()} />
-            <AnimatedButton text='Review Score' width='w-42' hideTextOnSmallScreens={false} icon={isUpdatingScore ? faSpinner : faTrophy} onClick={() => goToReview()} spinIcon={isUpdatingScore} disabled={isUpdatingScore} />
+            <AnimatedButton layout='vertical' text='Back to Home' icon={faHome} onClick={() => goToHome()} />
+            <AnimatedButton layout='vertical' text='Review Score' icon={isUpdatingScore ? faSpinner : faTrophy} onClick={() => goToReview()} iconAnim={isUpdatingScore && 'spin'} disabled={isUpdatingScore} />
         </div>
     );
 }
