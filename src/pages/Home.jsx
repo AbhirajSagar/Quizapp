@@ -154,10 +154,11 @@ function Navbar({ setAccountInfoVisible }) {
 
 function SearchBtn() {
   return (
-    <div className='flex px-2 w-fit bg-accent-one dark:bg-dark-secondary rounded m-0 h-full justify-center items-center gap-1.5 cursor-pointer hover:bg-accent-two hover:drop-shadow-accent-two drop-shadow-2xl'>
-      <FontAwesomeIcon icon={faSearch} className='text-white' />
-      <p className='text-white hidden md:flex font-semibold text-sm'>Search</p>
-    </div>
+    // <div className='flex px-2 w-fit bg-accent-one dark:bg-dark-secondary rounded m-0 h-full justify-center items-center gap-1.5 cursor-pointer hover:bg-accent-two hover:drop-shadow-accent-two drop-shadow-2xl'>
+    //   <FontAwesomeIcon icon={faSearch} className='text-white' />
+    //   <p className='text-white hidden md:flex font-semibold text-sm'>Search</p>
+    // </div>
+    <AnimatedButton text='Search' icon={faSearch}/>
   );
 }
 

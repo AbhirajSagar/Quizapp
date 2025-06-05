@@ -16,7 +16,7 @@ export default function App()
 {
     const [isLoading, setIsLoading] = useState(true)
     const [darkMode, setDarkMode] = useState(() =>
-    {
+    {   
         const saved = localStorage.getItem('mode')
         if (saved !== null) return saved === 'true'
         return window.matchMedia('(prefers-color-scheme: dark)').matches

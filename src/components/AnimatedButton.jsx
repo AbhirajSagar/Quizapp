@@ -29,7 +29,7 @@ export default function AnimatedButton({
     const buttonClasses = `
         bg-accent-one ${width} ${height} px-3 dark:bg-dark-secondary md:px-4 flex items-center rounded
         text-light-primary text-xs cursor-pointer font-bold text-nowrap ${justify} m-0.5 my-2 mb-3 disabled:opacity-50 disabled:cursor-not-allowed dark:shadow-dark-tertiary shadow-blue-600 transition-all duration-100 ease-linear shadow-[0px_5px_0px_0px] active:translate-y-[5px] active:shadow-[0px_0px_0px_0px]
-        ${hoverEffect ? 'hover:brightness-150 transition-colors duration-150 hover:drop-shadow-md' : ''}
+        ${hoverEffect ? 'hover:bg-blue-900 transition-colors duration-150 hover:drop-shadow-md' : ''}
         shadow-accent-two ${className}
     `.trim()
 
