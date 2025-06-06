@@ -169,10 +169,10 @@ function SearchBtn() {
   );
 }
 
-function AccountInfoModal({ user, setAccountInfoVisible }) {
+function AccountInfoModal({ user, setAccountInfoVisible }) 
+{
   const navigate = useNavigate();
   const navigateToPlayer = () => navigate('/player');
-  const navigateToCircuitBuilder = () => navigate('/circuit');
 
   async function signOut() {
     const { error } = await supabase.auth.signOut();
@@ -198,7 +198,6 @@ function AccountInfoModal({ user, setAccountInfoVisible }) {
     return (
       <div className='w-full mt-4 flex-col'>
         <AnimatedButton className='w-full my-0.5 disabled:opacity-60' justify='justify-start' icon={faMobileScreen} text='Play Local Quiz' onClick={navigateToPlayer} hideTextOnSmallScreens={false} />
-        <AnimatedButton className='w-full my-0.5 disabled:opacity-60' justify='justify-start' icon={faMicrochip} text='Ciruit Builder' onClick={navigateToCircuitBuilder} hideTextOnSmallScreens={false} />
         <AnimatedButton className='w-full my-0.5 disabled:opacity-60' justify='justify-start' icon={faHeart} text='Favourites' hideTextOnSmallScreens={false} disabled />
         <AnimatedButton className='w-full my-0.5 disabled:opacity-60' justify='justify-start' icon={faClipboardQuestion} text='My Quizzes' hideTextOnSmallScreens={false} disabled />
         <AnimatedButton className='w-full my-0.5 disabled:opacity-60' justify='justify-start' icon={faRightFromBracket} text='Sign Out' onClick={signOut} hideTextOnSmallScreens={false} />

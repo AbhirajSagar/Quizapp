@@ -1,7 +1,8 @@
-import { useLocation } from "react-router-dom";
+import { useRef } from 'react';
+import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import AnimatedButton from "../components/AnimatedButton";
-import { faCopy, faShare, faShareAlt, faWarning } from "@fortawesome/free-solid-svg-icons";
+import { faCat, faCopy, faHouse, faShare, faShareAlt, faWarning } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { supabase } from "../supabaseClient";
 
@@ -62,6 +63,34 @@ function NotWorking()
 function ShareCard({quizData})
 {
     const [isThumbnailLoaded,setThumbnailLoaded] = useState(false);
+    const navigate = useNavigate();
+    const inputRef = useRef(null);
+
+    const goToHome = () =>
+    {
+        navigate('/');
+    }
+
+    function share()
+    {
+        const value = inputRef.current.value;
+        if(navigator.share)
+        {
+            navigator.share({
+                title: 'Quizin',
+                text: 'Check this awesome quiz on Quizin!!',
+                url: value
+            })
+            .then(() => console.log('Shared!'))
+            .catch((err) => console.error('Share failed:', err))
+        }
+    }
+
+    function copyLink()
+    {
+        const value = inputRef.current.value;
+        navigator.clipboard.writeText(value);
+    }
 
     return (
         <div className="flex flex-col w-full m-2 justify-center items-center mt-20 gap-1 h-max md:w-[60%]">
@@ -82,11 +111,12 @@ function ShareCard({quizData})
                 
             </div>
             <div className="w-full dark:bg-dark-secondary bg-light-tertiary rounded-[0px_0px_10px_10px] p-4">
-                <input value={getShareUrl(window.location.origin,quizData)} className="text-sm dark:bg-dark-primary bg-light-primary w-full p-2 rounded text-center overflow-hidden text-gray-700 dark:text-white" readOnly={true}/>
+                <input ref={inputRef} value={getShareUrl(window.location.origin,quizData)} className="text-sm dark:bg-dark-primary bg-light-primary w-full p-2 rounded text-center overflow-hidden text-gray-700 dark:text-white" readOnly={true}/>
             </div>
             <div className="w-full flex justify-center items-center gap-1">
-                <AnimatedButton  hideTextOnSmallScreens={false}  text="Copy Link" icon={faCopy} className="-translate-y-1.5"/>
-                <AnimatedButton  hideTextOnSmallScreens={false} text="Share" icon={faShareAlt} className="-translate-y-1.5"/>
+                <AnimatedButton onClick={goToHome}  hideTextOnSmallScreens={false}  text="Back to Home" icon={faHouse} className="-translate-y-1.5"/>
+                <AnimatedButton onClick={copyLink} hideTextOnSmallScreens={false}  text="Copy Link" icon={faCopy} className="-translate-y-1.5"/>
+                <AnimatedButton onClick={share}  hideTextOnSmallScreens={false} text="Share" icon={faShareAlt} className="-translate-y-1.5"/>
             </div>
         </div>
     );
@@ -107,7 +137,7 @@ function Navbar()
     <div className='flex z-50 items-center px-2 md:px-10 py-1.5 justify-between fixed h-12 top-0 left-0 right-0 backdrop-blur-3xl dark:border-b-dark-tertiary border-b-accent-one border-b-2'>
       <h2 className='dark:text-white text-accent-one text-md md:text-1xl font-extrabold'>Share your quiz</h2>
       <div className='h-full w-[50%] flex justify-end'>
-        <AnimatedButton icon={faShare} layout='horizontal' onClick={() => setAccountInfoVisible(true)} />
+        <AnimatedButton icon={faCat} text='Github' layout='horizontal' onClick={() => window.location.href = 'https://github.com/AbhirajSagar/Quizapp'} />
       </div>
     </div>
   );
