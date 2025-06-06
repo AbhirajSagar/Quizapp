@@ -8,10 +8,12 @@ import { useAuth } from '../authContext';
 
 import QuizSettingsWindow from '../components/QuizEditor/QuizSettingsWindow';
 import { Question, Actions } from '../components/QuizEditor/Question';
+import { useNavigate } from 'react-router-dom';
 
 export default function Editor() 
 {
     const { user } = useAuth();
+    const navigate = useNavigate();
 
     //Quiz Data
     const [questions, setQuestions] = useState([]);
@@ -55,10 +57,11 @@ export default function Editor()
                 likes: 0,
                 private: isQuizPrivate,
                 filePath: filePath,
-                thumbnailPath: thumbnailUrl
+                thumbnailPath: thumbnailUrl,
+                questions: quiz.questions.length
             }
-        ]);
-        
+        ]).select();
+
         if (quizError) 
         {
             setUploadError(quizError)
@@ -67,6 +70,9 @@ export default function Editor()
 
         setIsUploading(false);
         setIsQuizSettingsOpen(false);
+        const key = quizData[0].id;
+        sessionStorage.setItem(key, JSON.stringify(quizData));
+        navigate(`/share?key=${key}`);
     }
 
     async function saveQuiz() 

@@ -13,15 +13,18 @@ export default function Home() {
   const [quizzes, setQuizzes] = useState([]);
   const [AccountInfoVisible, setAccountInfoVisible] = useState(false);
 
-  useEffect(() => {
-    async function fetchLatestQuizzes() {
+  useEffect(() => 
+  {
+    async function fetchLatestQuizzes() 
+    {
       const { data, error } = await supabase
-        .from('quizzes')
-        .select()
-        .order('created_at', { ascending: false })
-        .limit(15);
+      .from('quizzes')
+      .select()
+      .order('created_at', { ascending: false })
+      .limit(15);
 
-      if (!error) {
+      if (!error) 
+      {
         setQuizzes(data)
         setIsLoading(false)
       }
@@ -29,9 +32,7 @@ export default function Home() {
 
     const timeoutId = setTimeout(fetchLatestQuizzes, 1000)
 
-    return () => {
-      clearTimeout(timeoutId)
-    }
+    return () => clearTimeout(timeoutId)
   }, [])
 
 
@@ -65,7 +66,10 @@ function Section({ heading, subheading, isLoading, quizzes }) {
   );
 }
 
-function QuizSkeleton({url,setIsCardLoaded}) {
+function QuizSkeleton({url,setIsCardLoaded}) 
+{
+  useEffect(() => console.log('url',url),[]);
+
   return (
     <div className='w-full h-60 my-1 z-1 bg-light-secondary dark:bg-dark-secondary relative rounded-lg overflow-hidden cursor-pointer hover:-translate-y-1 transition-transform duration-75 animate-pulse'>
       <div className='w-full absolute bottom-0 h-12 bg-accent-one dark:bg-dark-tertiary flex justify-between items-center px-4'>
@@ -80,8 +84,15 @@ function QuizSkeleton({url,setIsCardLoaded}) {
 function QuizCard({ quiz }) 
 {
   const [loaded,setIsCardLoaded] = useState(false);
+  const [isThumbnailEmpty,setIsThumbnailEmpty] = useState(false);
   const navigate = useNavigate();
   const goToPlayer = (query) => navigate('/player' + query);
+
+  useEffect(() => 
+  {
+    if (!quiz.thumbnailPath) 
+      setIsThumbnailEmpty(true);
+  }, [quiz.thumbnailPath]);
 
   function share(event) 
   {
@@ -109,7 +120,7 @@ function QuizCard({ quiz })
     return quiz.title;
   }
 
-  if(!loaded) return <QuizSkeleton url={quiz.thumbnailPath} setIsCardLoaded={setIsCardLoaded}/>
+  if(!loaded && !isThumbnailEmpty) return <QuizSkeleton url={quiz.thumbnailPath} setIsCardLoaded={setIsCardLoaded}/>
 
   return (
     <div
@@ -119,7 +130,7 @@ function QuizCard({ quiz })
       <img 
         src={quiz.thumbnailPath}
         alt={quiz.title}
-        className="w-full object-cover"
+        className={`w-full object-cover ${isThumbnailEmpty && 'h-59'}`}
       />
 
       <div className='w-full h-12 bg-accent-one dark:bg-dark-tertiary flex justify-between items-center px-4'>
