@@ -62,7 +62,7 @@ export default function Review()
         }
 
         const query = new URLSearchParams(location.search);
-        const id = query.get('id');
+        const id = decodeURIComponent(query.get('id'));
         if (!id) return;
 
         fetchAttemptsData(id);

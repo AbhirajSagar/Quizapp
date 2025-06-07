@@ -36,8 +36,8 @@ export default function Player()
     useEffect(() => 
     {
         const query = new URLSearchParams(location.search);
-        const file = query.get("file");
-        const id = query.get("id");
+        const file = decodeURIComponent(query.get("file"));
+        const id = decodeURIComponent(query.get("id"));
         if(id) setQuizId(id);
 
         if (!file) {

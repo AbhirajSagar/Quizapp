@@ -28,7 +28,7 @@ export default function Share()
         }
 
         const query = new URLSearchParams(location.search);
-        const key = query.get('key');
+        const key = decodeURIComponent(query.get('key'));
         const quizData = sessionStorage.getItem(key,null);
         if(!quizData) return setUrlNotWorking(true);
 
