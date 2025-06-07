@@ -1,12 +1,15 @@
 import { useState } from 'react'
 import { supabase } from '../supabaseClient'
+import { useModal } from '../modalContext'
 
-const AuthPage = () => {
+const AuthPage = () => 
+{
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [name, setName] = useState('')
     const [isLogin, setIsLogin] = useState(true)
     const [loading, setLoading] = useState(false)
+    const {showModal} = useModal();
 
     const handleAuth = async () => 
     {
@@ -14,7 +17,11 @@ const AuthPage = () => {
         if (isLogin) 
         {
             const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-            console.log({ data, error });
+            if (error || !data.user)
+            {
+                showModal(error?.message || "Login failed", error?.name || "AuthError")
+                console.log(error || "No error object, but login failed")
+            }
         }
         else 
         {
@@ -32,32 +39,35 @@ const AuthPage = () => {
 
             if (signUpError) 
             {
-                console.error(signUpError);
+                showModal(signUpError?.message || "Sign up failed", signUpError?.name || "AuthError")
                 setLoading(false);
                 return;
             }
 
             const { data: profileTableData, error } = await supabase
-                .from('profiles')
-                .insert(
-                    [
-                        {
-                            id: signUpData.user?.id,
-                            name: signUpData.user?.user_metadata?.name,
-                            email: signUpData.user?.email,
-                            friends: [],
-                            institution: null
-                        }
-                    ]);
+            .from('profiles')
+            .insert(
+                [
+                    {
+                        id: signUpData.user?.id,
+                        name: signUpData.user?.user_metadata?.name,
+                        email: signUpData.user?.email,
+                        friends: [],
+                        institution: null
+                    }
+                ]);
 
             if (error) 
             {
-                console.log('data',data);
+                showModal(error?.message || "Profile creation failed", error?.name || "AuthError")
                 console.error(error);
                 setLoading(false);
                 return;
             }
-            else console.log(profileTableData);
+            else 
+            {
+                showModal("Sign up successful", "Please verify your email id");
+            }
         }
 
         setLoading(false);

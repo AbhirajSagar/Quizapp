@@ -126,7 +126,7 @@ function getShareUrl(origin,quizData)
 {
     const quizId = quizData[0]?.id;
     const quizFilePath = quizData[0]?.filePath;
-    const quizUrl = `${origin}/player?file=${quizFilePath}&id=${quizId}`;
+    const quizUrl = `${origin}/player?file=${encodeURIComponent(quizFilePath)}&id=${encodeURIComponent(quizId)}`;
 
     return quizUrl;
 }

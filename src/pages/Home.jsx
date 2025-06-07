@@ -171,6 +171,21 @@ function SearchBtn() {
 
 function AccountInfoModal({ user, setAccountInfoVisible }) 
 {
+  const [quizAttemptsCount,setQuizAttemptsCount] = useState('loading..');
+
+  useEffect(() => 
+  {
+    async function getAttemptedQuizCount() 
+    {
+      const { count, error } = await supabase.from('attempts').select('*', { count: 'exact', head: true }).eq('user_id', user?.id);
+      
+      if (!error) setQuizAttemptsCount(count);
+      else  setQuizAttemptsCount(null);
+    }
+
+    getAttemptedQuizCount();
+  },[user])
+
   const navigate = useNavigate();
   const navigateToPlayer = () => navigate('/player');
 
@@ -188,7 +203,7 @@ function AccountInfoModal({ user, setAccountInfoVisible })
         <div className='w-15 h-15 bg-accent-one flex justify-center text-3xl rounded-2xl text-white font-extrabold items-center text-center'>{user?.user_metadata.name[0] || 'U'}</div>
         <div>
           <h2 className='text-2xl text-right font-extrabold text-accent-one'>{user?.user_metadata.name || 'Anonymous'}</h2>
-          <p className='text-md font-normal text-accent-one'>0 Quiz Attempted</p>
+          <p className='text-md font-normal text-accent-one'>{quizAttemptsCount ? `${quizAttemptsCount} Quiz Attempted` : 'Error loading data'}</p>
         </div>
       </div>
     );
