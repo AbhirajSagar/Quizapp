@@ -10,6 +10,8 @@ import Auth from "./pages/Auth"
 import Loading from "./pages/Loading"
 import Review from "./pages/Review"
 import Share from "./pages/Share"
+import AIQuiz  from './pages/AIQuiz'
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faMoon, faLightbulb } from "@fortawesome/free-solid-svg-icons"
 import AnimatedButton from './components/AnimatedButton'
@@ -80,6 +82,7 @@ export default function App()
                 <Route path="/player" element={<Player />} />
                 <Route path="/review" element={<Review />} />
                 <Route path="/share" element={<Share />} />
+                <Route path="/ai-quiz" element={<AIQuiz />} />
                 <Route path="*" element={<NotFound />} />
             </Routes>
                 <AnimatedButton onClick={() => toggleDarkMode(!darkMode)} icon={darkMode ? faLightbulb : faMoon} className='fixed bottom-0 right-0 m-8'/>

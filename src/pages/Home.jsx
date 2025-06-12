@@ -51,17 +51,27 @@ function Section({ heading, subheading, isLoading, quizzes }) {
     <div className='p-20 px-5 sm:px-15'>
       {heading && <h2 className='text-center dark:text-white md:text-left font-bold md:text-2xl text-md text-dark-secondary'>{heading}</h2>}
       {subheading && <h2 className='text-center dark:text-white md:text-left md:text-lg text-xs text-dark-primary'>{subheading}</h2>}
-        <div className="w-full bg-primary-secondary columns-1 sm:columns-2 md:columns-4 gap-2 p-1 pt-3 md:p-4">
+        <AIQuizGeneration/>
+        <div className="w-full bg-primary-secondary columns-1 sm:columns-2 md:columns-4 gap-4 p-1 pt-3 md:p-4">
         {
           isLoading
             ? [...Array(15)].map((_, index) => <div key={index} className="mb-4 break-inside-avoid"><QuizSkeleton /></div>)
             : quizzes.map((quiz, index) => (
-              <div key={index} className="mb-2 break-inside-avoid">
+              <div key={index} className="mb-4 break-inside-avoid">
                 <QuizCard quiz={quiz} />
               </div>
             ))
         }
         </div>
+    </div>
+  );
+}
+
+function AIQuizGeneration()
+{
+  return (
+    <div className='w-full h-50 bg-black rounded-lg mb-4'>
+
     </div>
   );
 }
@@ -116,7 +126,7 @@ function QuizCard({ quiz })
   function getTrimmedTitle() 
   {
     if (!quiz) return null;
-    if (quiz.title.length > 15) return quiz.title.substring(0, 15) + '...';
+    if (quiz.title.length > 20) return quiz.title.substring(0, 20) + '...';
     return quiz.title;
   }
 
@@ -125,7 +135,7 @@ function QuizCard({ quiz })
   return (
     <div
       onClick={(e) => goToPlayer(`?file=${quiz.filePath}&id=${quiz.id}`)}
-      className='w-full bg-light-secondary dark:bg-dark-secondary relative rounded-lg overflow-hidden cursor-pointer hover:-translate-y-1 transition-transform duration-75 break-inside-avoid'
+      className='w-full bg-light-secondary dark:bg-dark-secondary relative rounded-xl overflow-hidden cursor-pointer hover:scale-105 transition-transform duration-75 break-inside-avoid'
     >
       <img 
         src={quiz.thumbnailPath}
@@ -134,7 +144,7 @@ function QuizCard({ quiz })
       />
 
       <div className='w-full h-12 bg-accent-one dark:bg-dark-tertiary flex justify-between items-center px-4'>
-        <p className='text-light-primary sm:font-semibold md:text-xl text-center'>
+        <p className='text-light-primary md:text-md text-center'>
           {getTrimmedTitle() || 'Untitled'}
         </p>
         <div className='flex items-center justify-center gap-3'>
@@ -163,7 +173,8 @@ function Navbar({ setAccountInfoVisible })
   );
 }
 
-function SearchBtn() {
+function SearchBtn() 
+{
   return (
     <AnimatedButton text='Search' icon={faSearch} layout='horizontal'/>
   );
@@ -188,6 +199,7 @@ function AccountInfoModal({ user, setAccountInfoVisible })
 
   const navigate = useNavigate();
   const navigateToPlayer = () => navigate('/player');
+  const navigateToAiQuiz = () => navigate('/ai-quiz');
 
   async function signOut() {
     const { error } = await supabase.auth.signOut();
@@ -213,6 +225,7 @@ function AccountInfoModal({ user, setAccountInfoVisible })
     return (
       <div className='w-full mt-4 flex-col'>
         <AnimatedButton className='w-full my-0.5 disabled:opacity-60' justify='justify-start' icon={faMobileScreen} text='Play Local Quiz' onClick={navigateToPlayer} hideTextOnSmallScreens={false} />
+        <AnimatedButton className='w-full my-0.5 disabled:opacity-60' justify='justify-start' icon={faMobileScreen} text='AI Quiz Generator' onClick={navigateToAiQuiz} hideTextOnSmallScreens={false} />
         <AnimatedButton className='w-full my-0.5 disabled:opacity-60' justify='justify-start' icon={faHeart} text='Favourites' hideTextOnSmallScreens={false} disabled />
         <AnimatedButton className='w-full my-0.5 disabled:opacity-60' justify='justify-start' icon={faClipboardQuestion} text='My Quizzes' hideTextOnSmallScreens={false} disabled />
         <AnimatedButton className='w-full my-0.5 disabled:opacity-60' justify='justify-start' icon={faRightFromBracket} text='Sign Out' onClick={signOut} hideTextOnSmallScreens={false} />
