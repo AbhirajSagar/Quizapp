@@ -11,6 +11,7 @@ import Loading from "./pages/Loading"
 import Review from "./pages/Review"
 import Share from "./pages/Share"
 import AIQuiz  from './pages/AIQuiz'
+import Search from './pages/Search'
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faMoon, faLightbulb } from "@fortawesome/free-solid-svg-icons"
@@ -82,6 +83,7 @@ export default function App()
                 <Route path="/player" element={<Player />} />
                 <Route path="/review" element={<Review />} />
                 <Route path="/share" element={<Share />} />
+                <Route path="/search" element={<Search />} />
                 <Route path="/ai-quiz" element={<AIQuiz />} />
                 <Route path="*" element={<NotFound />} />
             </Routes>
