@@ -1,6 +1,10 @@
 import { useState, useEffect } from 'react'
 import { Routes, Route } from "react-router-dom"
 import { supabase } from "./supabaseClient"
+import { faMoon, faLightbulb } from "@fortawesome/free-solid-svg-icons"
+import AnimatedButton from './components/AnimatedButton'
+
+//Pages
 import Home from "./pages/Home"
 import About from "./pages/About"
 import NotFound from "./pages/NotFound"
@@ -12,10 +16,7 @@ import Review from "./pages/Review"
 import Share from "./pages/Share"
 import AIQuiz  from './pages/AIQuiz'
 import Search from './pages/Search'
-
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faMoon, faLightbulb } from "@fortawesome/free-solid-svg-icons"
-import AnimatedButton from './components/AnimatedButton'
+import Liked from './pages/Liked'
 
 export default function App()
 {
@@ -85,6 +86,8 @@ export default function App()
                 <Route path="/share" element={<Share />} />
                 <Route path="/search" element={<Search />} />
                 <Route path="/ai-quiz" element={<AIQuiz />} />
+                <Route path="/liked" element={<Liked />} />
+
                 <Route path="*" element={<NotFound />} />
             </Routes>
                 <AnimatedButton onClick={() => toggleDarkMode(!darkMode)} icon={darkMode ? faLightbulb : faMoon} className='fixed bottom-0 right-0 m-8'/>

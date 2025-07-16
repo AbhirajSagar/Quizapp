@@ -71,7 +71,7 @@ export default function AIQuiz()
 
     return (
         <div className='dark:bg-dark-primary bg-light-tertiary min-h-[100vh] flex justify-center items-center flex-col'>
-            <DotLottieReact src="https://lottie.host/61f558cc-bdf4-438d-845e-bb5adb75083a/KxuVBBxzf7.lottie" className="w-2xl h-2xl" loop autoplay />
+            <DotLottieReact src="https://lottie.host/61f558cc-bdf4-438d-845e-bb5adb75083a/KxuVBBxzf7.lottie" className="w-sm h-sm" loop autoplay />
             {   
                 isGenerating ? 
                 <GeneratingQuiz/> :
@@ -117,7 +117,7 @@ function GenerateQuiz({ setTopic, placeholders,placeholderIdx,generateQuiz, faPa
                         Generate
                     </button>
                 </div>
-                <div className="flex  justify-center items-center">
+                <div className="flex  justify-center items-center flex-wrap">
                     <select onChange={e => setLevel(e.target.value)} className="cursor-pointer w-60 p-2 bg-light-primary dark:bg-dark-secondary dark:text-white rounded-2xl outline-0 m-2 mr-0" value={level}>
                         <option value="beginner" className="cursor-pointer dark:bg-dark-secondary dark:text-white">Beginner</option>
                         <option value="intermediate" className="cursor-pointer dark:bg-dark-secondary dark:text-white">Intermediate</option>

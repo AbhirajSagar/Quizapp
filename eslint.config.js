@@ -28,6 +28,8 @@ export default [
         'warn',
         { allowConstantExport: true },
       ],
+      'brace-style': ['error', 'stroustrup'],
+      'arrow-body-style': ['error', 'always'],
     },
   },
 ]
