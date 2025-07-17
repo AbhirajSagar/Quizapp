@@ -92,7 +92,7 @@ export default function App()
 
                 <Route path="*" element={<NotFound />} />
             </Routes>
-                <AnimatedButton onClick={() => toggleDarkMode(!darkMode)} icon={darkMode ? faLightbulb : faMoon} className='fixed bottom-0 rounded-full right-0 m-8'/>
+            <AnimatedButton onClick={() => toggleDarkMode(!darkMode)} icon={darkMode ? faLightbulb : faMoon} className='fixed bottom-0 rounded-full right-0 m-8'/>
         </div>
     )
 }

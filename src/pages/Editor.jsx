@@ -50,7 +50,8 @@ export default function Editor() {
 
 
 
-    async function publishQuiz() {
+    async function publishQuiz() 
+    {
         setIsUploading(true);
         const thumbnailUrl = await getThumbnailUrl();
         const quiz = getQuizObj();
@@ -91,15 +92,18 @@ export default function Editor() {
         navigate(`/share?key=${key}`);
     }
 
-    async function saveQuiz() {
+    async function saveQuiz() 
+    {
         setShowPublishButton(true);
         setIsQuizSettingsOpen(true);
     }
 
-    async function getThumbnailUrl() {
+    async function getThumbnailUrl() 
+    {
         if (!thumbnail) return console.log('No thumbnail uploaded');
 
-        try {
+        try 
+        {
             const userName = user?.user_metadata?.name?.trim() || 'unknown';
             const thumbnailPath = `quiz/${quizName.trim() || 'untitled'}-${Date.now()}-${userName}.jpg`;
 
@@ -126,7 +130,8 @@ export default function Editor() {
         }
     }
 
-    function addQuestion(question) {
+    function addQuestion(question) 
+    {
         const questionToAdd =
         {
             id: Date.now() + Math.random().toString(36).slice(2, 9),
@@ -140,28 +145,34 @@ export default function Editor() {
         setQuestions(prev => [...prev, questionToAdd]);
     }
 
-    function setQuestion(index, question) {
+    function setQuestion(index, question) 
+    {
         setQuestions(prevQuestions => prevQuestions.map((q, i) => i === index ? question : q));
     }
 
-    function deleteQuestion(index) {
+    function deleteQuestion(index) 
+    {
         setQuestions(questions.filter((question, i) => i !== index));
     }
 
-    function setQuestionMark(index, mark) {
+    function setQuestionMark(index, mark) 
+    {
         if (!canBeMarked) return;
         setQuestions(prevQuestions => prevQuestions.map((q, i) => i === index ? { ...q, marks: mark } : q));
     }
 
-    function setQuestionType(index, type) {
+    function setQuestionType(index, type) 
+    {
         setQuestions(prevQuestions => prevQuestions.map((q, i) => i === index ? { ...q, type } : q));
     }
 
-    function setQuestionOptions(index, options) {
+    function setQuestionOptions(index, options) 
+    {
         setQuestions(prevQuestions => prevQuestions.map((q, i) => i === index ? { ...q, options } : q));
     }
 
-    function downloadQuiz() {
+    function downloadQuiz() 
+    {
         const quizData = getQuizObj();
         const blob = new Blob([JSON.stringify(quizData, null, 2)], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
@@ -173,7 +184,8 @@ export default function Editor() {
         URL.revokeObjectURL(url);
     }
 
-    function getQuizObj() {
+    function getQuizObj() 
+    {
         const quiz =
         {
             name: quizName,
@@ -204,7 +216,7 @@ export default function Editor() {
                             setQuestionMark={setQuestionMark}
                             setQuestion={setQuestion}
                             setQuestionOptions={setQuestionOptions}
-
+                            correctOption={question.answer}
                             deleteQuestion={deleteQuestion}
                             index={i}
                             key={question.id}
@@ -229,13 +241,15 @@ export default function Editor() {
     );
 }
 
-function Name({ setQuizName }) {
+function Name({ setQuizName })
+{
     return (
         <input name='quizName' type='text' className='w-full h-20 px-4 text-3xl text-center sm:text-left font-extrabold text-accent-one dark:text-light-primary rounded mt-12 focus-visible:outline-none' placeholder='Untitled Quiz' onChange={(e) => setQuizName(e.target.value)} />
     );
 }
 
-function Header({ downloadQuiz, addQuestion, setIsQuizSettingsOpen }) {
+function Header({ downloadQuiz, addQuestion, setIsQuizSettingsOpen }) 
+{
     return (
         <div className='flex items-center px-2 md:px-10 py-2 justify-center fixed h-12 top-0 left-0 right-0 backdrop-blur-2xl dark:border-b-dark-tertiary border-b-accent-one border-b-2'>
             <h2 className='text-accent-one dark:text-light-primary text-sm md:text-lg ml-2 font-extrabold text-nowrap'>Create Your Quiz</h2>

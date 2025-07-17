@@ -1,4 +1,5 @@
-import { faBatteryEmpty, faCircleCheck, faClose, faDiagramNext, faForwardStep, faHome, faPlay, faPlayCircle, faProcedures, faSpinner, faStar, faTrophy, faWarning } from '@fortawesome/free-solid-svg-icons';
+import { QuizStartPage } from '../components/QuizStartPage';
+import { faBatteryEmpty, faClose, faForwardStep, faHome, faSpinner, faStar, faTrophy, faWarning } from '@fortawesome/free-solid-svg-icons';
 import { useState, useRef, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStopwatch, faUpload } from '@fortawesome/free-solid-svg-icons';
@@ -9,7 +10,7 @@ import { supabase } from '../supabaseClient';
 import Loading from './Loading';
 import { useAuth } from '../authContext';
 import { useNavigate, useLocation } from "react-router-dom";
-import MenuNavbar from '../components/MenuNavbar';
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 
 export default function Player() 
 {
@@ -183,66 +184,7 @@ export default function Player()
     else return <QuizStartPage quizName={quizName} quizTime={quizTime} questions={questions} filePath={filePath} setQuizStarted={setQuizStarted} img={quizThumbnail}/>;
 }
 
-function QuizStartPage({ quizName, quizTime, questions, filePath, setQuizStarted, img })
-{
-    const getTitleSplits = () => filePath.split(/[\/.-]/);
 
-    function getUploadTimeLocale()
-    {
-        const parts = getTitleSplits();
-        const timestamp = parseInt(parts[2]);
-        const date = new Date(timestamp);
-        return date.toLocaleString();
-    }
-
-    function getQuizUploader()
-    {
-        const parts = getTitleSplits();
-        return parts[3];
-    }
-
-    return (
-        <>
-            <MenuNavbar showSearchBtn={false} showCreateQuiz={false} />
-            <div className='bg-light-primary dark:bg-dark-primary w-full min-h-[100vh] overflow-x-hidden pt-16'>
-                <div className='max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-6 px-4'>
-                    <div className='w-full'>
-                        <div className='w-full aspect-video relative rounded-xl overflow-hidden'>
-                            <img src={img} className="w-full h-full object-cover bg-dark-secondary" />
-                            <button onClick={() => setQuizStarted(true)} className='absolute top-[50%] w-18 aspect-square left-[50%] translate-x-[-50%] translate-y-[-50%] z-10 bg-black/30 rounded-full flex justify-center items-center cursor-pointer hover:scale-110 duration-150'>
-                                <FontAwesomeIcon icon={faPlay} className='text-white text-5xl' />
-                            </button>
-                        </div>
-
-                        <div className='mt-4 bg-light-tertiary dark:bg-dark-secondary p-4 rounded-xl shadow'>
-                            <h1 className='text-2xl sm:text-3xl font-bold text-dark-primary dark:text-white'>{quizName}</h1>
-                            <p className='text-sm text-dark-primary dark:text-white/80 mt-1'>By {getQuizUploader()}</p>
-                            <div className='mt-3 flex flex-wrap gap-3 text-sm sm:text-base'>
-                                <span className='bg-light-primary dark:bg-white/10 px-3 py-1 rounded-full text-dark-primary dark:text-white'>
-                                    {questions.length} Questions
-                                </span>
-                                <span className='bg-light-primary dark:bg-white/10 px-3 py-1 rounded-full text-dark-primary dark:text-white'>
-                                    {quizTime === -1 ? "No Time Limit" : `${quizTime} sec/question`}
-                                </span>
-                                <span className='bg-light-primary dark:bg-white/10 px-3 py-1 rounded-full text-dark-primary dark:text-white'>
-                                    {getUploadTimeLocale()}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div>
-                        <div className='bg-light-tertiary dark:bg-dark-secondary p-4 rounded-xl shadow h-full'>
-                            <p className='text-dark-primary dark:text-white font-semibold'>Recommended</p>
-                            {/* Map recommendations here */}
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </>
-    );
-}
 
 
 function QuizQuestion(quizTime, quizName, QuizStat, marks, QuizTimer, quizId, setMarks, questionIndex, questions, setQuizTime, setQuestionIndex, setSelectedOption, setIsCorrect, selectedOption) 
@@ -367,7 +309,7 @@ function EndPage({ goToHome, goToReview, marks, quizId })
     return (
         <div className='mt-[10%] flex flex-col items-center justify-center'>
             {isUpdatingScore ?
-                <Loading /> : (error ? <FontAwesomeIcon icon={faWarning} className='text-6xl dark:text-light-primary text-cyan-500 mb-4' /> : <FontAwesomeIcon icon={faCircleCheck} className='text-6xl dark:text-light-primary text-cyan-500 mb-4' />)
+                <Loading /> : (error ? <FontAwesomeIcon icon={faWarning} className='text-6xl dark:text-light-primary text-cyan-500 mb-4' /> : <DotLottieReact src="https://lottie.host/66b5151a-3c60-41f9-b841-79b1376c6121/ymjjJ9cNdh.lottie" className='max-w-4xl' autoplay/>)
             }
             <h1 className='text-center text-lg font-bold dark:text-light-primary text-cyan-500'>Quiz Completed</h1>
             {
@@ -381,8 +323,8 @@ function EndPage({ goToHome, goToReview, marks, quizId })
                     :
                     <p className='text-center dark:text-light-primary text-sm text-cyan-500 mb-6'>You have completed the quiz</p>
             }
-            <AnimatedButton layout='vertical' text='Back to Home' hideTextOnSmallScreens={false} icon={faHome} onClick={() => goToHome()} />
-            <AnimatedButton layout='vertical' text='Review Score' hideTextOnSmallScreens={false} icon={isUpdatingScore ? faSpinner : faTrophy} onClick={() => goToReview()} iconAnim={isUpdatingScore && 'spin'} disabled={isUpdatingScore} />
+            <AnimatedButton text='Back to Home' hideTextOnSmallScreens={false} icon={faHome} onClick={() => goToHome()} className=' h-[75%] text-xs p-1 sm:text-md m-2'/>
+            <AnimatedButton text='Review Score' hideTextOnSmallScreens={false} icon={isUpdatingScore ? faSpinner : faTrophy} onClick={() => goToReview()} iconAnim={isUpdatingScore && 'spin'} disabled={isUpdatingScore} className=' h-[75%] text-xs p-1 sm:text-md m-2'/>
         </div>
     );
 }
