@@ -129,9 +129,8 @@ export function Actions({ downloadQuiz, addQuestion, setIsQuizSettingsOpen })
 {
     return (
         <div className='w-full h-full flex justify-end items-center gap-1 m-1 md:m-0'>
-            <AnimatedButton onClick={() => addQuestion(1)} icon={faPlus} text='Add Question' layout='horizontal'/>
-            <AnimatedButton onClick={() => downloadQuiz()} icon={faDownload} text='Download Quiz' layout='horizontal'/>
-            <AnimatedButton onClick={() => setIsQuizSettingsOpen(true)} icon={faGear} text='Quiz Settings' layout='horizontal'/>
+            <AnimatedButton onClick={() => downloadQuiz()} icon={faDownload} text='Download Quiz' layout='horizontal' className='hidden sm:flex'/>
+            <AnimatedButton onClick={() => setIsQuizSettingsOpen(true)} icon={faGear} text='Quiz Settings' layout='horizontal' hideTextOnSmallScreens={false}/>
         </div>
     );
 }

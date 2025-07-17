@@ -71,20 +71,10 @@ export default function AIQuiz()
 
     return (
         <div className='dark:bg-dark-primary bg-light-tertiary min-h-[100vh] flex justify-center items-center flex-col'>
-            <DotLottieReact src="https://lottie.host/61f558cc-bdf4-438d-845e-bb5adb75083a/KxuVBBxzf7.lottie" className="w-sm h-sm" loop autoplay />
             {   
                 isGenerating ? 
                 <GeneratingQuiz/> :
-                <GenerateQuiz 
-                    setTopic={setTopic} 
-                    placeholders={placeholders}
-                    placeholderIdx={placeholderIdx}
-                    generateQuiz={generateQuiz} 
-                    faPaperPlane={faPaperPlane} 
-                    setLevel={setLevel} 
-                    level={level} 
-                    setQuestionsCount={setQuestionsCount} 
-                    questionsCount={questionsCount}/>
+                <GenerateQuiz setTopic={setTopic}  placeholders={placeholders} placeholderIdx={placeholderIdx} generateQuiz={generateQuiz}  faPaperPlane={faPaperPlane} setLevel={setLevel} level={level} setQuestionsCount={setQuestionsCount} questionsCount={questionsCount}/>
             }
         </div>
     );
@@ -100,46 +90,55 @@ function GeneratingQuiz()
     );
 }
 
-function GenerateQuiz({ setTopic, placeholders,placeholderIdx,generateQuiz, faPaperPlane, setLevel, level, setQuestionsCount, questionsCount }) 
+function GenerateQuiz({setTopic, placeholders, placeholderIdx, generateQuiz, faPaperPlane, setLevel, level, setQuestionsCount, questionsCount}) 
 {
-    const [reviewBeforePublish,setReviewBeforePublish] = useState(true);
+    const [reviewBeforePublish, setReviewBeforePublish] = useState(true);
 
     return (
     <>
-        <h2 className="text-2xl font-extrabold dark:text-white text-dark-secondary">AI Quiz Generation</h2>
-        <p className="dark:text-white text-dark-secondary">Create tailored quizzes instantly with the power of AI</p>
-        <div className="min-h-60 w-full p-4  flex justify-start items-center flex-col">
-            <div className="w-[60%] flex justify-center items-stretch flex-col">
-                <div className="flex-grow flex h-16 dark:bg-dark-secondary bg-light-primary dark:text-white rounded-2xl outline-0">
-                    <input type="text" placeholder={placeholders[placeholderIdx]} className="px-4 w-full h-full outline-0" onChange={e => setTopic(e.target.value)} />
-                    <button onClick={generateQuiz} className="dark:bg-dark-primary text-dark-primary bg-light-tertiary hover:text-white font-extrabold m-1 cursor-pointer hover:bg-accent-one dark:text-white rounded-2xl px-4 flex justify-center items-center">
-                        <FontAwesomeIcon icon={faPaperPlane} className="text-lg mr-2" />
-                        Generate
+        <DotLottieReact src='https://lottie.host/aba7fcb0-aea6-4e42-a29c-0b010ad38042/VSoLmVXFtU.lottie' autoplay loop className="max-w-3xl"/>
+        <h2 className="font-extrabold text-3xl text-center mb-1 text-dark-secondary dark:text-white">Quizy</h2>
+        <p className="text-md text-center mb-6 text-dark-secondary dark:text-white">Generate custom quizzes instantly using AI</p>
+
+        <div className="w-full flex justify-center px-4 mb-16">
+            <div className="w-full max-w-3xl flex flex-col gap-4">
+                <div className="flex flex-col items-stretch gap-1">
+                    <input type="text" placeholder={placeholders[placeholderIdx]} onChange={e => setTopic(e.target.value)} className="p-4 rounded-t-2xl text-sm outline-none dark:bg-dark-secondary bg-light-primary dark:text-white"/>
+                    <button onClick={generateQuiz} className="h-12 px-5 flex items-center justify-center gap-2 font-bold rounded-b-2xl bg-accent-one text-white text-dark-primary hover:bg-accent-one hover:text-white transition">
+                        <FontAwesomeIcon icon={faPaperPlane} className="text-lg" />Generate
+                        <p className="bg-white/25 px-3 py-1 text-xs rounded-3xl">Daily Left 5/5</p>
                     </button>
                 </div>
-                <div className="flex  justify-center items-center flex-wrap">
-                    <select onChange={e => setLevel(e.target.value)} className="cursor-pointer w-60 p-2 bg-light-primary dark:bg-dark-secondary dark:text-white rounded-2xl outline-0 m-2 mr-0" value={level}>
-                        <option value="beginner" className="cursor-pointer dark:bg-dark-secondary dark:text-white">Beginner</option>
-                        <option value="intermediate" className="cursor-pointer dark:bg-dark-secondary dark:text-white">Intermediate</option>
-                        <option value="advanced" className="cursor-pointer dark:bg-dark-secondary dark:text-white">Advanced</option>
+
+                <div className="grid grid-cols-2 gap-3">
+                    <select value={level} onChange={e => setLevel(e.target.value)} className="w-full px-4 py-1 rounded-2xl outline-none bg-light-primary dark:bg-dark-secondary dark:text-white">
+                        <option value="beginner">Beginner</option>
+                        <option value="intermediate">Intermediate</option>
+                        <option value="advanced">Advanced</option>
                     </select>
-                    <select onChange={e => setQuestionsCount(e.target.value)} className="cursor-pointer w-60 p-2 bg-light-primary dark:bg-dark-secondary dark:text-white rounded-2xl outline-0 m-2 mr-0" value={questionsCount}>
-                        <option value="1" className="cursor-pointer dark:bg-dark-secondary dark:text-white">1 Question</option>
-                        <option value="2" className="cursor-pointer dark:bg-dark-secondary dark:text-white">2 Questions</option>
-                        <option value="3" className="cursor-pointer dark:bg-dark-secondary dark:text-white">3 Questions</option>
-                        <option value="4" className="cursor-pointer dark:bg-dark-secondary dark:text-white">4 Questions</option>
-                        <option value="5" className="cursor-pointer dark:bg-dark-secondary dark:text-white">5 Questions</option>
-                        <option value="10" className="cursor-pointer dark:bg-dark-secondary dark:text-white">10 Questions</option>
-                        <option value="20" className="cursor-pointer dark:bg-dark-secondary dark:text-white">20 Questions</option>
+
+                    <select value={questionsCount} onChange={e => setQuestionsCount(e.target.value)} className="w-full px-4 py-1 rounded-2xl outline-none bg-light-primary dark:bg-dark-secondary dark:text-white">
+                        {[1,2,3,4,5,10,20].map(num => (
+                            <option key={num} value={num}>{num} Question{num > 1 && 's'}</option>
+                        ))}
                     </select>
-                    <div className="cursor-pointer w-60 p-2 bg-light-primary dark:bg-dark-secondary dark:text-white rounded-2xl outline-0 m-2 mr-0 flex justify-between items-center">
-                        <p>Review First</p>
-                        <div onClick={() => setReviewBeforePublish((v) => !v)} className={`h-7 w-15 rounded-lg flex justify-center items-center ${(reviewBeforePublish ? 'bg-accent-two drop-shadow-accent-two shadow-2xl' : 'bg-dark-primary')}`}>
-                            <p className={`text-center font-semibold ${reviewBeforePublish ? 'text-dark-primary' : 'text-light-primary'}`}>{reviewBeforePublish ? 'Yes' : 'No'}</p>
+
+                    <div className="col-span-full flex items-center justify-between px-4 py-1 rounded-2xl bg-light-primary dark:bg-dark-secondary dark:text-white">
+                        <span>Review First</span>
+                        <div 
+                            onClick={() => setReviewBeforePublish(v => !v)}
+                            className={`w-20 h-8 rounded-lg flex items-center justify-center font-semibold cursor-pointer transition ${
+                                reviewBeforePublish 
+                                    ? 'bg-accent-two text-dark-primary shadow-lg'
+                                    : 'bg-dark-primary text-light-primary'
+                            }`}
+                        >
+                            {reviewBeforePublish ? 'Yes' : 'No'}
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </>);
+    </>
+    );
 }

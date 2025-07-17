@@ -12,6 +12,7 @@ export function AccountInfoModal({ user, setAccountInfoVisible })
   const navigateToPlayer = () => navigate('/player?file=');
   const navigateToAiQuiz = () => navigate('/ai-quiz');
   const navigateToLikedQuiz = () => navigate('/liked');
+  const navigateToMyQuizzes = () => navigate('/myquizzes');
 
   useEffect(() => 
   {
@@ -40,7 +41,7 @@ export function AccountInfoModal({ user, setAccountInfoVisible })
       <motion.div initial={{ opacity: 0, scale: 1 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 1 }} transition={{ duration: 0.2 }} className='fixed md:w-fit md:outline-1 outline-accent-one inset-0 z-50 flex items-center md:justify-start justify-center  dark:bg-dark-primary/40 bg-light-secondary/10 backdrop-blur-2xl' onClick={() => setIsQuizSettingsOpen(false)}>
         <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className='h-full w-full flex md:w-120  flex-col px-4 p-2' onClick={(e) => e.stopPropagation()}>
           <AccountInfoSection user={user} quizAttemptsCount={quizAttemptsCount}/>
-          <Options setAccountInfoVisible={setAccountInfoVisible} navigateToPlayer={navigateToPlayer} navigateToAiQuiz={navigateToAiQuiz} navigateToLikedQuiz={navigateToLikedQuiz} signOut={signOut} />
+          <Options setAccountInfoVisible={setAccountInfoVisible} navigateToPlayer={navigateToPlayer} navigateToAiQuiz={navigateToAiQuiz} navigateToLikedQuiz={navigateToLikedQuiz} navigateToMyQuizzes={navigateToMyQuizzes} signOut={signOut} />
         </motion.div>
       </motion.div>
     </AnimatePresence>
@@ -60,14 +61,14 @@ function AccountInfoSection({user,quizAttemptsCount})
     );
 }
 
-function Options({setAccountInfoVisible, navigateToPlayer, navigateToAiQuiz, navigateToLikedQuiz, signOut}) 
+function Options({setAccountInfoVisible, navigateToPlayer, navigateToAiQuiz, navigateToLikedQuiz,navigateToMyQuizzes, signOut}) 
 {
     return (
         <div className='w-full mt-4 flex-col'>
             <AnimatedButton className='w-full my-0.5 disabled:opacity-60' justify='justify-start' icon={faMobileScreen} text='Play Local Quiz' onClick={navigateToPlayer} hideTextOnSmallScreens={false} />
             <AnimatedButton className='w-full my-0.5 disabled:opacity-60' justify='justify-start' icon={faMicrochip} text='AI Quiz Generator' onClick={navigateToAiQuiz} hideTextOnSmallScreens={false} />
             <AnimatedButton className='w-full my-0.5 disabled:opacity-60' justify='justify-start' icon={faThumbsUp} text='Liked Quizzes' onClick={navigateToLikedQuiz} hideTextOnSmallScreens={false} />
-            <AnimatedButton className='w-full my-0.5 disabled:opacity-60' justify='justify-start' icon={faClipboardQuestion} text='My Quizzes' hideTextOnSmallScreens={false} disabled />
+            <AnimatedButton className='w-full my-0.5 disabled:opacity-60' justify='justify-start' icon={faClipboardQuestion} text='My Quizzes' onClick={navigateToMyQuizzes} hideTextOnSmallScreens={false} />
             <AnimatedButton className='w-full my-0.5 disabled:opacity-60' justify='justify-start' icon={faRightFromBracket} text='Sign Out' onClick={signOut} hideTextOnSmallScreens={false} />
             <AnimatedButton className='w-full my-0.5 disabled:opacity-60' justify='justify-start' icon={faClose} text='Close' onClick={() => setAccountInfoVisible(false)} hideTextOnSmallScreens={false} />
         </div>

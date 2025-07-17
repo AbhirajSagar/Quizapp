@@ -41,13 +41,13 @@ export default function Home()
   );
 }
 
-function Section({ heading, subheading, isLoading, quizzes, setShowSearchBtn }) 
+function Section({ heading, subheading, isLoading, quizzes, setShowSearchBtn})
 {
   const { user } = useAuth();
 
   return (
     <div className='p-20 px-2 sm:px-15'>
-      <SearchSection setShowSearchBtn={setShowSearchBtn} heading={heading} subheading={subheading} />
+      <SearchSection setShowSearchBtn={setShowSearchBtn} heading={heading} subheading={subheading}/>
       <div className="w-full bg-primary-secondary grid grid-cols-1 min-[450px]:grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 p-1 pt-3 md:p-4">
         {
           isLoading ? [...Array(15)].map((_, index) => <QuizSkeleton key={index} url="fallback.png" setIsCardLoaded={() => { }} />)

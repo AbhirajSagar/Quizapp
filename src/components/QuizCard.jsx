@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faShare } from '@fortawesome/free-solid-svg-icons';
+import { faPenToSquare, faShare } from '@fortawesome/free-solid-svg-icons';
 import { supabase } from '../supabaseClient';
 import { AiOutlineLike, AiFillLike } from 'react-icons/ai';
 import { getUserNameByFileName } from '../utils';
 
-export function QuizCard({ quiz, user }) 
+export function QuizCard({ quiz, user, canBeEdit = false}) 
 {
   const [isLiked, setIsLiked] = useState(false);
   const [loaded, setIsCardLoaded] = useState(false);
@@ -67,7 +67,11 @@ export function QuizCard({ quiz, user })
             <div className='w-full h-full'>
               <div className='flex justify-between items-center px-4 pt-2'>
                 <p className='dark:text-light-primary text-dark-primary md:text-md font-extrabold text-wrap text-left'>{getTrimmedTitle() || 'Untitled'}</p>
-                <div className='dark:text-light-primary text-dark-primary flex items-center justify-center gap-3'>{LikedButton(isLiked, toggleLiked)}</div>
+                <div className='dark:text-light-primary text-dark-primary flex items-center justify-center gap-3'>
+                  {
+                    canBeEdit ? EditButton(quiz.id,navigate) : LikedButton(isLiked, toggleLiked)
+                  }
+                </div>
               </div>
               <div className='flex justify-between items-center px-4 pb-2'>
                 <p className='dark:text-light-primary text-dark-primary md:text-md text-center text-sm text-wrap'>{getUserNameByFileName(quiz.filePath)}</p>
@@ -82,8 +86,30 @@ export function QuizCard({ quiz, user })
 function LikedButton(isLiked, toggleLiked) 
 {
   return isLiked ?
-  <AiFillLike onClick={toggleLiked} className='text-white text-2xl transition-transform duration-200 active:scale-125' />
-  : <AiOutlineLike onClick={toggleLiked} className='text-white text-2xl transition-transform duration-200 active:scale-125' />;
+  <AiFillLike onClick={toggleLiked} className='dark:text-white text-dark-primary text-2xl transition-transform duration-200 active:scale-125' />
+  : <AiOutlineLike onClick={toggleLiked} className='dark:text-white text-dark-primary text-2xl transition-transform duration-200 active:scale-125' />;
+}
+
+function EditButton(id,navigate)
+{
+
+  async function EditQuiz(e)
+  {
+    e.stopPropagation();
+    const { data, error } = await supabase.from('quizzes').select().eq('id', id).single();
+    if (error) return console.log(error);
+
+    const { data: file, error: fileError } = await supabase.storage.from('quiz').download(data.filePath);
+    if (fileError) return console.error(fileError);
+
+    const text = await file.text();
+    const quiz = JSON.parse(text);
+    navigate('/editor', { state: { quiz } });
+  }
+
+  return (
+    <FontAwesomeIcon icon={faPenToSquare} onClick={EditQuiz} className='dark:text-white text-dark-primary text-2xl transition-transform duration-200 active:scale-125' />
+  );
 }
 
 export function QuizSkeleton({ url, setIsCardLoaded }) 

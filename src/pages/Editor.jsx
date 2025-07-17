@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { faCheckCircle } from '@fortawesome/free-solid-svg-icons';
+import { faCheckCircle, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 
 import '../index.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -211,16 +211,19 @@ export default function Editor() {
                         />)
                 }
             </div>
-            {
-                questions.length > 0
-                &&
-                <div className='my-15 p-2 flex justify-center'>
-                    <button onClick={() => saveQuiz()} className='bg-accent-one p-2 rounded px-4 text-white hover:bg-accent-two cursor-pointer'>
-                        <FontAwesomeIcon icon={faCheckCircle} className='mr-2' />
+            <div className='my-15 p-2 flex justify-center'>
+                {
+                    questions.length > 0 &&
+                    <button onClick={() => saveQuiz()} className='bg-accent-one m-1 p-2 rounded px-4 text-white hover:bg-accent-two cursor-pointer'>
+                            <FontAwesomeIcon icon={faCheckCircle} className='mr-2' />
                         Save Quiz
                     </button>
-                </div>
-            }
+                }
+                <button onClick={() => addQuestion('')} className='bg-accent-one m-1 p-2 rounded px-4 text-white hover:bg-accent-two cursor-pointer'>
+                    <FontAwesomeIcon icon={faPlusCircle} className='mr-2' />
+                    Add Question
+                </button>
+            </div>
             <QuizSettingsWindow canBeMarked={canBeMarked} setCanBeMarked={setCanBeMarked} error={error} isUploading={isUploading} publishQuiz={publishQuiz} isQuizSettingsOpen={isQuizSettingsOpen} setQuizTime={setQuizTime} setQuizThumnail={setQuizThumbnail} setIsQuizPrivate={setIsQuizPrivate} setIsQuizSettingsOpen={setIsQuizSettingsOpen} showPublishButton={showPublishButton} />
         </div>
     );

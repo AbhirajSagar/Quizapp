@@ -1,4 +1,4 @@
-import { faBatteryEmpty, faCircleCheck, faClose, faDiagramNext, faForwardStep, faHome, faPlayCircle, faProcedures, faSpinner, faStar, faTrophy, faWarning } from '@fortawesome/free-solid-svg-icons';
+import { faBatteryEmpty, faCircleCheck, faClose, faDiagramNext, faForwardStep, faHome, faPlay, faPlayCircle, faProcedures, faSpinner, faStar, faTrophy, faWarning } from '@fortawesome/free-solid-svg-icons';
 import { useState, useRef, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStopwatch, faUpload } from '@fortawesome/free-solid-svg-icons';
@@ -208,23 +208,23 @@ function QuizStartPage({ quizName, quizTime, questions, filePath, setQuizStarted
                 <div className='max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-6 px-4'>
                     <div className='w-full'>
                         <div className='w-full aspect-video relative rounded-xl overflow-hidden'>
-                            <img src={img} className="w-full h-full object-cover" />
-                            <button onClick={() => setQuizStarted(true)} className='absolute top-[50%] w-18 aspect-square left-[50%] translate-x-[-50%] translate-y-[-50%] z-10'>
-                                <FontAwesomeIcon icon={faPlayCircle} className='text-dark-primary text-5xl cursor-pointer duration-200 hover:scale-110'/>
+                            <img src={img} className="w-full h-full object-cover bg-dark-secondary" />
+                            <button onClick={() => setQuizStarted(true)} className='absolute top-[50%] w-18 aspect-square left-[50%] translate-x-[-50%] translate-y-[-50%] z-10 bg-black/30 rounded-full flex justify-center items-center cursor-pointer hover:scale-110 duration-150'>
+                                <FontAwesomeIcon icon={faPlay} className='text-white text-5xl' />
                             </button>
                         </div>
 
-                        <div className='mt-4 bg-primary-secondary dark:bg-dark-secondary p-4 rounded-xl shadow'>
+                        <div className='mt-4 bg-light-tertiary dark:bg-dark-secondary p-4 rounded-xl shadow'>
                             <h1 className='text-2xl sm:text-3xl font-bold text-dark-primary dark:text-white'>{quizName}</h1>
                             <p className='text-sm text-dark-primary dark:text-white/80 mt-1'>By {getQuizUploader()}</p>
                             <div className='mt-3 flex flex-wrap gap-3 text-sm sm:text-base'>
-                                <span className='bg-white/20 dark:bg-white/10 px-3 py-1 rounded-full text-dark-primary dark:text-white'>
+                                <span className='bg-light-primary dark:bg-white/10 px-3 py-1 rounded-full text-dark-primary dark:text-white'>
                                     {questions.length} Questions
                                 </span>
-                                <span className='bg-white/20 dark:bg-white/10 px-3 py-1 rounded-full text-dark-primary dark:text-white'>
+                                <span className='bg-light-primary dark:bg-white/10 px-3 py-1 rounded-full text-dark-primary dark:text-white'>
                                     {quizTime === -1 ? "No Time Limit" : `${quizTime} sec/question`}
                                 </span>
-                                <span className='bg-white/20 dark:bg-white/10 px-3 py-1 rounded-full text-dark-primary dark:text-white'>
+                                <span className='bg-light-primary dark:bg-white/10 px-3 py-1 rounded-full text-dark-primary dark:text-white'>
                                     {getUploadTimeLocale()}
                                 </span>
                             </div>
@@ -232,7 +232,7 @@ function QuizStartPage({ quizName, quizTime, questions, filePath, setQuizStarted
                     </div>
 
                     <div>
-                        <div className='bg-primary-secondary dark:bg-dark-secondary p-4 rounded-xl shadow h-full'>
+                        <div className='bg-light-tertiary dark:bg-dark-secondary p-4 rounded-xl shadow h-full'>
                             <p className='text-dark-primary dark:text-white font-semibold'>Recommended</p>
                             {/* Map recommendations here */}
                         </div>

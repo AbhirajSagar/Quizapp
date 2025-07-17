@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { QuizCard, QuizSkeleton } from "../components/QuizCard";
 import { supabase } from "../supabaseClient";
 
-export default function Liked()
+export default function MyQuizzes()
 {
     const { user } = useAuth();
     const [quizzes, setQuizzes] = useState([]);
@@ -16,40 +16,14 @@ export default function Liked()
 
         const fetchLikedQuizzes = async () =>
         {
-            const { data: liked, error: likedError } = await supabase
-                .from("liked")
-                .select("quiz_id")
-                .eq("user_id", user.id);
-
-            if (likedError)
+            const { data , error } = await supabase.from("quizzes").select().eq("user_id", user.id);
+            if(error)
             {
-                console.log(likedError);
-                setIsLoading(false);
+                console.log(error);
                 return;
             }
-
-            const quizIds = liked.map(item => item.quiz_id);
-
-            if (quizIds.length === 0)
-            {
-                setIsLoading(false);
-                return;
-            }
-
-            const { data: quizData, error: quizError } = await supabase
-                .from("quizzes")
-                .select("*")
-                .in("id", quizIds);
-
-            if (quizError)
-            {
-                console.log(quizError);
-            }
-            else
-            {
-                setQuizzes(quizData);
-            }
-
+            
+            setQuizzes(data);
             setIsLoading(false);
         };
 
@@ -60,8 +34,8 @@ export default function Liked()
         <div className='dark:bg-dark-primary bg-light-primary min-h-[100vh]'>
             <MenuNavbar />
             <div className='p-20 px-2 sm:px-[60px]'>
-                <h2 className="px-2 sm:px-4  font-extrabold text-xl text-dark-primary dark:text-light-secondary">Liked Quizzes</h2>
-                <p className="px-2 sm:px-4   text-sm text-dark-primary dark:text-light-secondary">Your favourites, ready to requiz</p>
+                <h2 className="px-2 sm:px-4  font-extrabold text-xl text-dark-primary dark:text-light-secondary">My Quizzes</h2>
+                <p className="px-2 sm:px-4   text-sm text-dark-primary dark:text-light-secondary">All the quizzes, you've created</p>
                 <div className="w-full bg-primary-secondary grid grid-cols-1 min-[450px]:grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 p-1 pt-3 md:p-4">
                     {
                         isLoading
@@ -69,7 +43,7 @@ export default function Liked()
                                 <QuizSkeleton key={index} url="fallback.png" setIsCardLoaded={() => { }} />
                             ))
                             : quizzes.map((quiz, index) => (
-                                <QuizCard key={index} quiz={quiz} user={user} />
+                                <QuizCard key={index} quiz={quiz} user={user} canBeEdit={true}/>
                             ))
                     }
                 </div>
