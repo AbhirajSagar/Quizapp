@@ -1,8 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import AnimatedButton from "./AnimatedButton";
-import { faPlusCircle, faHouseUser, faSearch, faBars, faLightbulb } from "@fortawesome/free-solid-svg-icons";
+import { faPlusCircle, faSearch, faBars } from "@fortawesome/free-solid-svg-icons";
 import { motion } from "framer-motion";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Logo from './Logo';
+// import Logo from '../assets/quizin.svg';
 
 export function Navbar({ setAccountInfoVisible, showSearchBtn, showCreateQuiz })
 {
@@ -11,7 +12,7 @@ export function Navbar({ setAccountInfoVisible, showSearchBtn, showCreateQuiz })
 
   return (
     <div className='flex z-50 items-center px-2 md:px-10 py-1.5 justify-between fixed h-12 top-0 left-0 right-0 backdrop-blur-3xl dark:border-b-dark-tertiary border-b-accent-one border-b-2'>
-      <LogoBtn index={1}/>
+      <Logo onClick={() => navigate('/')}/>
       <div className='h-full w-[50%] flex justify-end'>
         {showSearchBtn && <SearchBtn />}
         {showCreateQuiz && <AnimatedButton text='Create' icon={faPlusCircle} layout='horizontal' onClick={createQuiz} className='mx-1' />}
