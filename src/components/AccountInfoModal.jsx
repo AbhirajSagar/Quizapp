@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AnimatedButton from '../components/AnimatedButton';
 import { AnimatePresence, motion } from 'framer-motion';
-import { faThumbsUp, faMobileScreen, faMicrochip, faClipboardQuestion, faRightFromBracket, faClose } from '@fortawesome/free-solid-svg-icons';
+import { faThumbsUp, faMobileScreen, faMicrochip, faClipboardQuestion, faRightFromBracket, faClose, faGamepad } from '@fortawesome/free-solid-svg-icons';
 import { supabase } from '../supabaseClient';
 
 export function AccountInfoModal({ user, setAccountInfoVisible })
@@ -69,6 +69,7 @@ function Options({setAccountInfoVisible, navigateToPlayer, navigateToAiQuiz, nav
             <AnimatedButton className='w-full my-0.5 disabled:opacity-60' justify='justify-start' icon={faMicrochip} text='AI Quiz Generator' onClick={navigateToAiQuiz} hideTextOnSmallScreens={false} />
             <AnimatedButton className='w-full my-0.5 disabled:opacity-60' justify='justify-start' icon={faThumbsUp} text='Liked Quizzes' onClick={navigateToLikedQuiz} hideTextOnSmallScreens={false} />
             <AnimatedButton className='w-full my-0.5 disabled:opacity-60' justify='justify-start' icon={faClipboardQuestion} text='My Quizzes' onClick={navigateToMyQuizzes} hideTextOnSmallScreens={false} />
+            <AnimatedButton className='w-full my-0.5 disabled:opacity-60' justify='justify-start' icon={faGamepad} text='Games by Quiz' onClick={signOut} hideTextOnSmallScreens={false} />
             <AnimatedButton className='w-full my-0.5 disabled:opacity-60' justify='justify-start' icon={faRightFromBracket} text='Sign Out' onClick={signOut} hideTextOnSmallScreens={false} />
             <AnimatedButton className='w-full my-0.5 disabled:opacity-60' justify='justify-start' icon={faClose} text='Close' onClick={() => setAccountInfoVisible(false)} hideTextOnSmallScreens={false} />
         </div>
