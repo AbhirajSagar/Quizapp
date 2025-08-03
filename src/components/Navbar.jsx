@@ -24,9 +24,12 @@ export function Navbar({ setAccountInfoVisible, showSearchBtn, showCreateQuiz })
 
 function SearchBtn()
 {
+    const navigate = useNavigate();
+    const navigateToSearch = () => navigate('/search');
+
     return (
         <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
-            <AnimatedButton text='Search' icon={faSearch} layout='horizontal' />
+            <AnimatedButton text='Search' icon={faSearch} layout='horizontal' onClick={navigateToSearch}/>
         </motion.div>
     );
 }

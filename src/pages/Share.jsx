@@ -5,6 +5,7 @@ import AnimatedButton from "../components/AnimatedButton";
 import { faCat, faCopy, faHouse, faShare, faShareAlt, faWarning } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { supabase } from "../supabaseClient";
+import { motion } from 'framer-motion';
 
 export default function Share()
 {
@@ -94,8 +95,8 @@ function ShareCard({quizData})
 
     return (
         <div className="flex flex-col w-full m-2 justify-center items-center mt-20 gap-1 h-max md:w-[60%]">
-            <img src={quizData[0]?.thumbnailPath} onLoad={() => setThumbnailLoaded(true)} className={`w-full rounded-[10px_10px_0px_0px] max-h-[50vh] min-h-[50vh] h-fit object-cover ${!isThumbnailLoaded && 'animate-pulse'}`}/>
-            <div className="w-full dark:bg-dark-secondary flex flex-row justify-between items-center bg-light-tertiary p-4">
+            <motion.img initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} src={quizData[0]?.thumbnailPath} onLoad={() => setThumbnailLoaded(true)} className={`w-full rounded-[10px_10px_0px_0px] max-h-[50vh] min-h-[50vh] h-fit object-cover ${!isThumbnailLoaded && 'animate-pulse'}`}/>
+            <motion.div initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} className="w-full dark:bg-dark-secondary flex flex-row justify-between items-center bg-light-tertiary p-4">
                 <div>
                     <h2 className="text-md md:text-xl font-extrabold text-accent-one dark:text-white">{quizData[0]?.title.length > 0 ? quizData[0]?.title : 'Untitled'}</h2>
                     <h2 className="text-xs font-semibold text-accent-one dark:text-white">{'By ' + quizData[0]?.filePath.split('-').pop().replace('.json','')}</h2>
@@ -108,15 +109,14 @@ function ShareCard({quizData})
                         <h2 className="md:text-xl text-xs font-extrabold text-white">{'Q' + quizData[0]?.questions}</h2>
                     </div>
                 </div>
-                
-            </div>
+            </motion.div>
             <div className="w-full dark:bg-dark-secondary bg-light-tertiary rounded-[0px_0px_10px_10px] p-4">
                 <input ref={inputRef} value={getShareUrl(window.location.origin,quizData)} className="text-sm dark:bg-dark-primary bg-light-primary w-full p-2 rounded text-center overflow-hidden text-gray-700 dark:text-white" readOnly={true}/>
             </div>
             <div className="w-full flex justify-center items-center gap-1">
-                <AnimatedButton onClick={goToHome}  hideTextOnSmallScreens={false}  text="Back to Home" icon={faHouse} className="-translate-y-1.5"/>
-                <AnimatedButton onClick={copyLink} hideTextOnSmallScreens={false}  text="Copy Link" icon={faCopy} className="-translate-y-1.5"/>
-                <AnimatedButton onClick={share}  hideTextOnSmallScreens={false} text="Share" icon={faShareAlt} className="-translate-y-1.5"/>
+                <AnimatedButton onClick={goToHome}  hideTextOnSmallScreens={false}  text="Home" icon={faHouse} className="-translate-y-1.5  text-xs"/>
+                <AnimatedButton onClick={copyLink} hideTextOnSmallScreens={false}  text="Copy" icon={faCopy} className="-translate-y-1.5  text-xs"/>
+                <AnimatedButton onClick={share}  hideTextOnSmallScreens={false} text="Share" icon={faShareAlt} className="-translate-y-1.5  text-xs"/>
             </div>
         </div>
     );

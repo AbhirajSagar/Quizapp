@@ -10,7 +10,8 @@ import QuizSettingsWindow from '../components/QuizEditor/QuizSettingsWindow';
 import { Question, Actions } from '../components/QuizEditor/Question';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-export default function Editor() {
+export default function Editor() 
+{
     const { user } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
@@ -20,6 +21,7 @@ export default function Editor() {
     const [quizName, setQuizName] = useState('');
     const [quizTime, setQuizTime] = useState(-1); //Quiz Time In Seconds
     const [thumbnail, setQuizThumbnail] = useState(null);
+    const [tags,setTags] = useState([]);
 
     //Miscellanous
     const [isQuizPrivate, setIsQuizPrivate] = useState(false);
@@ -50,144 +52,148 @@ export default function Editor() {
 
 
 
-    async function publishQuiz() 
-    {
+    async function publishQuiz() {
         setIsUploading(true);
-        const thumbnailUrl = await getThumbnailUrl();
-        const quiz = getQuizObj();
-        const file = new Blob([JSON.stringify(quiz)], { type: 'application/json' });
+        try {
+            const thumbnailUrl = await getThumbnailUrl();
+            const quiz = getQuizObj();
+            const file = new Blob([JSON.stringify(quiz)], { type: 'application/json' });
+            const userName = user?.user_metadata?.name?.trim() || 'unknown';
+            const filePath = `quizzes/${quizName.trim() || 'untitled'}-${Date.now()}-${userName}.json`;
 
-        const userName = user?.user_metadata?.name?.trim() || 'unknown';
-        const filePath = `quizzes/${quizName.trim() || 'untitled'}-${Date.now()}-${userName}.json`;
+            // Upload quiz file
+            const { error: uploadError } = await supabase.storage.from('quiz').upload(filePath, file, { cacheControl: '3600', upsert: false });
+            if (uploadError) throw new Error('Upload error: ' + uploadError.message);
 
-        const { data, error } = await supabase.storage.from('quiz').upload(filePath, file, { cacheControl: '3600', upsert: false });
-        if (error) {
-            setUploadError(error);
-            return console.error('Upload error:', error);
+            // Insert quiz metadata
+            const { data: quizData, error: quizError } = await supabase
+                .from('quizzes')
+                .insert([
+                    {
+                        user_id: user.id,
+                        title: quizName,
+                        likes: 0,
+                        private: isQuizPrivate,
+                        filePath: filePath,
+                        thumbnailPath: thumbnailUrl,
+                        questions: quiz.questions.length
+                    }
+                ]).select();
+            if (quizError) throw new Error('DB insert error: ' + quizError.message);
+
+            // Tag handling
+            const { data: existing, error: existingTagsErr } = await supabase.from('tags').select('name').in('name', tags);
+            if (existingTagsErr) throw new Error('Tag fetch error: ' + existingTagsErr.message);
+            const existingNames = existing?.map(t => t.name) || [];
+            const newTags = tags.filter(tag => !existingNames.includes(tag));
+            if (newTags.length > 0) {
+                const { error: tagsInsertErr } = await supabase.from('tags').insert(newTags.map(name => ({ name })));
+                if (tagsInsertErr) throw new Error('Tag insert error: ' + tagsInsertErr.message);
+            }
+
+            const quizId = quizData?.[0]?.id;
+            const { data: tagsData, error: tagsFetchErr } = await supabase
+                .from('tags')
+                .select('id, name')
+                .in('name', tags);
+            if (tagsFetchErr) throw new Error('Tag fetch error: ' + tagsFetchErr.message);
+
+            const tagLinks = tagsData.map(tag => ({ quiz_id: quizId, tag_id: tag.id }));
+            if (tagLinks.length > 0) {
+                const { error: tagLinkErr } = await supabase.from('quiz_tags').insert(tagLinks);
+                if (tagLinkErr) throw new Error('Tag link error: ' + tagLinkErr.message);
+            }
+
+            setIsQuizSettingsOpen(false);
+            const key = quizData[0].id;
+            sessionStorage.setItem(key, JSON.stringify(quizData));
+            navigate(`/share?key=${key}`);
+        } catch (err) {
+            setUploadError(err);
+            console.error(err);
+        } finally {
+            setIsUploading(false);
         }
-
-        const { data: quizData, error: quizError } = await supabase
-            .from('quizzes')
-            .insert([
-                {
-                    user_id: user.id,
-                    title: quizName,
-                    likes: 0,
-                    private: isQuizPrivate,
-                    filePath: filePath,
-                    thumbnailPath: thumbnailUrl,
-                    questions: quiz.questions.length
-                }
-            ]).select();
-
-        if (quizError) {
-            setUploadError(quizError)
-            return console.error('DB insert error:', quizError);
-        }
-
-        setIsUploading(false);
-        setIsQuizSettingsOpen(false);
-        const key = quizData[0].id;
-        sessionStorage.setItem(key, JSON.stringify(quizData));
-        navigate(`/share?key=${key}`);
     }
 
-    async function saveQuiz() 
-    {
+    function saveQuiz() {
         setShowPublishButton(true);
         setIsQuizSettingsOpen(true);
     }
 
-    async function getThumbnailUrl() 
-    {
-        if (!thumbnail) return console.log('No thumbnail uploaded');
-
-        try 
-        {
+    async function getThumbnailUrl() {
+        if (!thumbnail) {
+            console.warn('No thumbnail uploaded');
+            return null;
+        }
+        try {
             const userName = user?.user_metadata?.name?.trim() || 'unknown';
             const thumbnailPath = `quiz/${quizName.trim() || 'untitled'}-${Date.now()}-${userName}.jpg`;
-
-            const { data: uploadData, error: uploadError } = await supabase.storage
+            const { error: uploadError } = await supabase.storage
                 .from('thumbnails')
-                .upload(thumbnailPath, thumbnail,
-                    {
-                        cacheControl: '3600',
-                        upsert: false
-                    });
-
-            if (uploadError) {
-                console.error('Thumbnail upload error:', uploadError);
-                return null;
-            }
-
+                .upload(thumbnailPath, thumbnail, {
+                    cacheControl: '3600',
+                    upsert: false
+                });
+            if (uploadError) throw new Error('Thumbnail upload error: ' + uploadError.message);
             const { data: publicUrlData } = supabase.storage.from('thumbnails').getPublicUrl(thumbnailPath);
-
-            if (publicUrlData)
-                return publicUrlData.publicUrl;
-        }
-        catch (error) {
+            return publicUrlData?.publicUrl || null;
+        } catch (error) {
             console.error('Error handling thumbnail:', error);
+            return null;
         }
     }
 
-    function addQuestion(question) 
-    {
-        const questionToAdd =
-        {
+    function addQuestion(question) {
+        const questionToAdd = {
             id: Date.now() + Math.random().toString(36).slice(2, 9),
-            question: question,
+            question,
             options: [],
             answer: 0,
             marks: 1,
             type: 'mcq'
         };
-
         setQuestions(prev => [...prev, questionToAdd]);
     }
 
-    function setQuestion(index, question) 
-    {
+    function setQuestion(index, question) {
         setQuestions(prevQuestions => prevQuestions.map((q, i) => i === index ? question : q));
     }
 
-    function deleteQuestion(index) 
-    {
-        setQuestions(questions.filter((question, i) => i !== index));
+    function deleteQuestion(index) {
+        setQuestions(prev => prev.filter((_, i) => i !== index));
     }
 
-    function setQuestionMark(index, mark) 
-    {
+    function setQuestionMark(index, mark) {
         if (!canBeMarked) return;
         setQuestions(prevQuestions => prevQuestions.map((q, i) => i === index ? { ...q, marks: mark } : q));
     }
 
-    function setQuestionType(index, type) 
-    {
+    function setQuestionType(index, type) {
         setQuestions(prevQuestions => prevQuestions.map((q, i) => i === index ? { ...q, type } : q));
     }
 
-    function setQuestionOptions(index, options) 
-    {
+    function setQuestionOptions(index, options) {
         setQuestions(prevQuestions => prevQuestions.map((q, i) => i === index ? { ...q, options } : q));
     }
 
-    function downloadQuiz() 
-    {
-        const quizData = getQuizObj();
-        const blob = new Blob([JSON.stringify(quizData, null, 2)], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `${quizName || 'quiz'}.json`;
-        a.click();
-        URL.revokeObjectURL(url);
+    function downloadQuiz() {
+        try {
+            const quizData = getQuizObj();
+            const blob = new Blob([JSON.stringify(quizData, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${quizName || 'quiz'}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        } catch (err) {
+            console.error('Download error:', err);
+        }
     }
 
-    function getQuizObj() 
-    {
-        const quiz =
-        {
+    function getQuizObj() {
+        return {
             name: quizName,
             time: quizTime,
             questions: questions.map(q => ({
@@ -199,8 +205,6 @@ export default function Editor() {
                 type: q.type
             }))
         };
-
-        return quiz;
     }
 
     return (
@@ -226,17 +230,17 @@ export default function Editor() {
             <div className='my-15 p-2 flex justify-center'>
                 {
                     questions.length > 0 &&
-                    <button onClick={() => saveQuiz()} className='bg-accent-one m-1 p-2 rounded px-4 text-white hover:bg-accent-two cursor-pointer'>
+                    <button onClick={() => saveQuiz()} className='bg-accent-one m-1 p-2 rounded px-4 text-xs sm:text-lg text-white hover:bg-accent-two cursor-pointer'>
                             <FontAwesomeIcon icon={faCheckCircle} className='mr-2' />
                         Save Quiz
                     </button>
                 }
-                <button onClick={() => addQuestion('')} className='bg-accent-one m-1 p-2 rounded px-4 text-white hover:bg-accent-two cursor-pointer'>
+                <button onClick={() => addQuestion('')} className='bg-accent-one m-1 p-2 rounded px-4 text-xs sm:text-lg text-white hover:bg-accent-two cursor-pointer'>
                     <FontAwesomeIcon icon={faPlusCircle} className='mr-2' />
                     Add Question
                 </button>
             </div>
-            <QuizSettingsWindow canBeMarked={canBeMarked} setCanBeMarked={setCanBeMarked} error={error} isUploading={isUploading} publishQuiz={publishQuiz} isQuizSettingsOpen={isQuizSettingsOpen} setQuizTime={setQuizTime} setQuizThumnail={setQuizThumbnail} setIsQuizPrivate={setIsQuizPrivate} setIsQuizSettingsOpen={setIsQuizSettingsOpen} showPublishButton={showPublishButton} />
+            <QuizSettingsWindow tags={tags} setTags={setTags} canBeMarked={canBeMarked} setCanBeMarked={setCanBeMarked} error={error} isUploading={isUploading} publishQuiz={publishQuiz} isQuizSettingsOpen={isQuizSettingsOpen} setQuizTime={setQuizTime} setQuizThumnail={setQuizThumbnail} setIsQuizPrivate={setIsQuizPrivate} setIsQuizSettingsOpen={setIsQuizSettingsOpen} showPublishButton={showPublishButton} />
         </div>
     );
 }

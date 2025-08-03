@@ -1,11 +1,12 @@
-import {faPlusCircle,faMinusCircle,faTrash,faCheckCircle,faCircleXmark,faPlus,faDownload,faGear} from '@fortawesome/free-solid-svg-icons';
+import {faPlusCircle,faMinusCircle,faTrash,faCheckCircle,faCircleXmark,faDownload,faGear} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {useEffect, useState} from 'react';
 import AnimatedButton from '../AnimatedButton';
+import { AnimatePresence, motion } from 'framer-motion';
 
-export function Question({ questions, setQuestionType, setQuestionMark, setQuestion, setQuizOptions, deleteQuestion, index: quesIndex })
+export function Question({ questions, setQuestionType, setQuestionMark, setQuestion, setQuizOptions, deleteQuestion, initialCorrectOptionIndex,index: quesIndex })
 {
-    const [correctOptionIndex, setCorrectOptionIndex] = useState(0);
+    const [correctOptionIndex, setCorrectOptionIndex] = useState(initialCorrectOptionIndex);
 
     useEffect(() =>
     {
@@ -80,7 +81,7 @@ export function Question({ questions, setQuestionType, setQuestionMark, setQuest
 
     return (
         <>
-            <div className='bg-light-tertiary dark:bg-dark-secondary w-full min-h-5 rounded-t-lg rounded-bl-lg p-2 focus-visible:outline-none text-dark-primary dark:text-light-primary flex flex-col'>
+            <motion.div initial={{scale:0}} animate={{scale:1}} exit={{scale:0}} className='bg-light-tertiary dark:bg-dark-secondary w-full min-h-5 rounded-t-lg rounded-bl-lg p-2 focus-visible:outline-none text-dark-primary dark:text-light-primary flex flex-col'>
                 <div className='flex justify-between'>
                     <QuestionType />
                     <Marks />
@@ -93,7 +94,7 @@ export function Question({ questions, setQuestionType, setQuestionMark, setQuest
                     :
                     (questions[quesIndex].options || []).slice(0, 2).map((option, i) => <Options key={i} index={i} correctOptionIndex={correctOptionIndex} setCorrectOptionIndex={setCorrectOptionIndex} option={option} createOption={createOption} isReadOnly={true}/>)
                 }
-            </div>
+            </motion.div>
 
             {/* Actions - Add Option, Remove Option, Delete Question */}
             <div className='float-right h-10 mb-2 dark:bg-dark-secondary bg-light-tertiary rounded-b-lg flex justify-start items-center py-1 px-2'>

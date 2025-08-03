@@ -179,15 +179,24 @@ export default function Player()
         </div>;
     }
 
+    function getCorrectOptionIndex(index)
+    {
+        const question = questions[index];
+        if (!question) return -1;
+
+
+        return question.answer;
+    }
+
     if (!quizData) return <UploadQuiz isLoading={isLoading} fileInputRef={fileInputRef} handleDragFile={handleDragFile} handleFileUpload={handleFileUpload} isHoveringUpload={isHoveringUpload} setIsHoveringUpload={setIsHoveringUpload} />
-    if(quizStarted) return QuizQuestion(quizTime, quizName, QuizStat, marks, QuizTimer, quizId, setMarks, questionIndex, questions, setQuizTime, setQuestionIndex, setSelectedOption, setIsCorrect, selectedOption);
+    if(quizStarted) return QuizQuestion(getCorrectOptionIndex(questionIndex),quizTime, quizName, QuizStat, marks, QuizTimer, quizId, setMarks, questionIndex, questions, setQuizTime, setQuestionIndex, setSelectedOption, setIsCorrect, selectedOption);
     else return <QuizStartPage quizName={quizName} quizTime={quizTime} questions={questions} filePath={filePath} setQuizStarted={setQuizStarted} img={quizThumbnail}/>;
 }
 
 
 
 
-function QuizQuestion(quizTime, quizName, QuizStat, marks, QuizTimer, quizId, setMarks, questionIndex, questions, setQuizTime, setQuestionIndex, setSelectedOption, setIsCorrect, selectedOption) 
+function QuizQuestion(correctOptionIndex, quizTime, quizName, QuizStat, marks, QuizTimer, quizId, setMarks, questionIndex, questions, setQuizTime, setQuestionIndex, setSelectedOption, setIsCorrect, selectedOption) 
 {
     return <div className='bg-light-primary dark:bg-dark-primary w-full h-full min-h-[100vh] p-3 md:p-10 overflow-x-hidden relative'>
         <div className='w-full justify-between flex-col md:flex-row gap-1 items-center flex p-3'>
@@ -197,7 +206,7 @@ function QuizQuestion(quizTime, quizName, QuizStat, marks, QuizTimer, quizId, se
                 {quizTime != -1 && <QuizStat icon={faStopwatch}><QuizTimer /></QuizStat>}
             </div>
         </div>
-        <Question quizId={quizId} marks={marks} setMarks={setMarks} questionIndex={questionIndex} questions={questions} setQuizTime={setQuizTime} setQuestionIndex={setQuestionIndex} setSelectedOption={setSelectedOption} setIsCorrect={setIsCorrect} selectedOption={selectedOption} />
+        <Question initialCorrectOptionIndex={correctOptionIndex} quizId={quizId} marks={marks} setMarks={setMarks} questionIndex={questionIndex} questions={questions} setQuizTime={setQuizTime} setQuestionIndex={setQuestionIndex} setSelectedOption={setSelectedOption} setIsCorrect={setIsCorrect} selectedOption={selectedOption} />
     </div>;
 }
 
