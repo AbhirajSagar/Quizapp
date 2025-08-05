@@ -18,6 +18,7 @@ import AIQuiz  from './pages/AIQuiz'
 import Search from './pages/Search'
 import Liked from './pages/Liked'
 import MyQuizzes from './pages/MyQuizzes'
+import Landing from './pages/Landing'
 
 export default function App()
 {
@@ -79,7 +80,8 @@ export default function App()
     return (
         <div>
             <Routes>
-                <Route path="/" element={<Home />} />
+                <Route path="/" element={<Landing />} />
+                <Route path="/home" element={<Home />} />
                 <Route path="/editor" element={<Editor />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/player" element={<Player />} />

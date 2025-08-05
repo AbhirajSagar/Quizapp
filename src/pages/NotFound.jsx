@@ -1,10 +1,9 @@
-import { DotLottieReact } from '@lottiefiles/dotlottie-react';
-
 export default function Home()
 {
     return (
-        <div className="w-full h-[100vh] flex justify-center items-center">
-            <DotLottieReact src="https://lottie.host/673a48fa-195c-404b-a5db-5ba6fc6abead/1nweMNBNf1.lottie" loop autoplay/>
+        <div className="w-full  h-[100vh] dark:bg-dark-primary bg-light-primary flex justify-center flex-col items-center">
+            <h2 className='text-2xl font-extrabold dark:text-white text-accent-one'>PAGE NOT FOUND</h2>
+            <p className='text-md text-center dark:text-white text-accent-one'>The page you're looking for does not exist</p>
         </div>
     );
 }

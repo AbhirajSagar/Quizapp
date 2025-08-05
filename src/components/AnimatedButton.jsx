@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
-export default function AnimatedButton({text = '', icon, onClick, hoverEffect = true,hideTextOnSmallScreens = true,disabled = false,className = '',iconAnim = 'none', layout = 'vertical'})
+export default function AnimatedButton({text = '', icon, onClick, hoverEffect = true,hideTextOnSmallScreens = true,disabled = false,className = '',iconAnim = 'none', layout = 'vertical', fullRounded = false})
 {
     const [isHovered, setIsHovered] = useState(false)
     const handleHover = (value) => hoverEffect && setIsHovered(value);

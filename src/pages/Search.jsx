@@ -48,12 +48,12 @@ export default function Search()
         const { data: tagQuizzes } = await supabase
             .from('quizzes')
             .select('*, profiles!inner(username), tags(name)')
-            .filter('tags.name', 'ilike', `%${cleaned}%`)
+            .filter('tags.name', 'ilike', `${cleaned}%`)
 
         const { data: userQuizzes } = await supabase
             .from('quizzes')
             .select('*, profiles!inner(username), tags(name)')
-            .filter('profiles.username', 'ilike', `%${cleaned}%`)
+            .filter('profiles.username', 'ilike', `${cleaned}%`)
 
         const combined = [...(tagQuizzes || []), ...(userQuizzes || [])]
         const unique = Array.from(new Map(combined.map(q => [q.id, q])).values())

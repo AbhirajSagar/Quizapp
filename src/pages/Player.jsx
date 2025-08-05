@@ -213,7 +213,7 @@ function QuizQuestion(correctOptionIndex, quizTime, quizName, QuizStat, marks, Q
 function Question({ marks, quizId, setMarks, questionIndex, questions, setQuestionIndex, setQuizTime, setSelectedOption, setIsCorrect, selectedOption }) 
 {
     const navigate = useNavigate();
-    const goToHome = () => navigate("/");
+    const goToHome = () => navigate("/home");
     const goToReview = () => navigate(`/review?id=${quizId}`);
 
     function handleOptionSelection(optionIndex) 
