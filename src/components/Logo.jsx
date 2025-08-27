@@ -1,3 +1,4 @@
+
 export default function Logo({onClick,className}) 
 {
     return (
@@ -5,7 +6,7 @@ export default function Logo({onClick,className})
             onClick={onClick}
             xmlns="http://www.w3.org/2000/svg"
             viewBox="150 0 1500 900"
-            className={'w-auto h-full cursor-pointer transition-all duration-500 hover:[fill:url(#warmGradient)] hover:scale-110 fill-accent-one dark:fill-white'}
+            className={'w-auto h-full cursor-pointer transition-all duration-500 hover:[fill:url(#warmGradient)] hover:scale-110 fill-accent-one dark:fill-white' + className}
         >
             <defs>
                 <linearGradient id="warmGradient" x1="0" y1="100%" x2="0" y2="0%">
