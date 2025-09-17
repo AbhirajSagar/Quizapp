@@ -51,8 +51,8 @@ export default function AIQuiz()
         setIsGenerating(true);
         const { data, error } = await supabase.functions.invoke('generate-quiz', { body: { topic: topic, count: questionsCount, level: level }, })
         if (error) return console.error(error);
-
         setData(data);
+        console.log(data);
         const jsonMatch = data.quiz?.match(/{[\s\S]*}/);
         if (jsonMatch)
         {

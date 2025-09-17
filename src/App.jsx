@@ -91,7 +91,7 @@ export default function App()
                 <Route path="/ai-quiz" element={<AIQuiz />} />
                 <Route path="/liked" element={<Liked />} />
                 <Route path="/myquizzes" element={<MyQuizzes />} />
-
+                <Route path="/auth" element={<Auth />} />
                 <Route path="*" element={<NotFound />} />
             </Routes>
             <AnimatedButton onClick={() => toggleDarkMode(!darkMode)} icon={darkMode ? faLightbulb : faMoon} className='fixed bottom-0 rounded-full right-0 m-8'/>
