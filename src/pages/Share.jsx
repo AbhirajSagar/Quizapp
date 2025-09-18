@@ -78,8 +78,8 @@ function ShareCard({quizData})
         if(navigator.share)
         {
             navigator.share({
-                title: 'Quizin',
-                text: 'Check this awesome quiz on Quizin!!',
+                title: 'Quyz',
+                text: 'Check this awesome quiz on Quyz!!',
                 url: value
             })
             .then(() => console.log('Shared!'))
